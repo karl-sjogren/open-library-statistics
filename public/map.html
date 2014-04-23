@@ -34,7 +34,7 @@
           var lat = parseFloat(data.lat);
           var lon = parseFloat(data.lon);
           var start = new LatLon(lat, lon);
-          var end = start.destinationPoint(Math.random()*360, (Math.random()*2) + 0.05);
+          var end = start.destinationPoint(Math.random()*360, (Math.random()*50) + 0.05);
           var myLatlng = new google.maps.LatLng(end.lat(), end.lon());
           
           var icon = {

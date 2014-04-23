@@ -1,4 +1,4 @@
-/* global require, console, __dirname, setInterval */
+/* global require, console, __dirname, setInterval, process */
 var express = require('express'),
     app = express(),
     server = require('http').createServer(app),
@@ -27,10 +27,6 @@ app.post('/recieve', function (req, res) {
   res.end();
 });
 
-var interval = setInterval(function() {
-  io.sockets.emit('search', { "keywords": "ondskan", "lat": "63.829768", "lon": "20.263596" });
-}, 1500);
-
 io.sockets.on('connection', function (socket) {
 //  socket.on('my other event', function (data) {
 //    console.log(data);
@@ -52,3 +48,40 @@ io.sockets.on('connection', function (socket) {
 }
 
 */
+
+
+var randomTitles = ['Ondskan', 'Bröderna lejonhjärta', 'En sak å en annan', 'Min bok om mig', 'Isprinsessan', 'En tandläkares mardröm', 'Hur man skriver en listetta', 'Bläckfiskresan'];
+var randomCoordinates = [
+  [63.829768, 20.263596], // Umeå
+  [63.093516, 21.676025], // Vasa
+  [57.718819, 12.944641], // Borås
+  [63.173574, 14.660568]  // Östersund
+];
+
+var interval = setInterval(function() {
+  var coords = shuffle(randomCoordinates)[0];
+  var obj = {
+    'keywords': shuffle(randomTitles)[0],
+    'lat': coords[0],
+    'lon': coords[1]
+  };
+  io.sockets.emit('search', obj);
+}, 300);
+
+function shuffle(array) {
+  var m = array.length, t, i;
+
+  // While there remain elements to shuffle…
+  while (m) {
+
+    // Pick a remaining element…
+    i = Math.floor(Math.random() * m--);
+
+    // And swap it with the current element.
+    t = array[m];
+    array[m] = array[i];
+    array[i] = t;
+  }
+
+  return array;
+}
