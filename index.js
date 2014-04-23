@@ -10,7 +10,7 @@ app.use(bodyParserMiddleware());
 app.use(lessMiddleware(__dirname + '/public', {force: true, debug: true}));
 app.use(express.static(__dirname + '/public'));
 
-server.listen(4096);
+server.listen(Number(process.env.PORT || 4096));
 
 app.post('/recieve', function (req, res) {
   var body = req.body;
