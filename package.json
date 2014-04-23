@@ -1,0 +1,27 @@
+{
+  "name": "search-visualizer",
+  "version": "0.0.0",
+  "description": "search-visualizer\r =================",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karl-sjogren/search-visualizer"
+  },
+  "engines": {
+    "node": "0.10.x"
+  },
+  "author": "Karl-Johan Sjögren",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/karl-sjogren/search-visualizer/issues"
+  },
+  "dependencies": {
+    "socket.io": "~0.9.16",
+    "express": "~4.0.0",
+    "less-middleware": "~0.2.1-beta",
+    "body-parser": "~1.0.2"
+  }
+}
