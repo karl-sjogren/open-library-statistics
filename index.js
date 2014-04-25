@@ -57,16 +57,18 @@ var randomCoordinates = [
   [57.718819, 12.944641], // Borås
   [63.173574, 14.660568]  // Östersund
 ];
-
+/*
 var interval = setInterval(function() {
-  var coords = shuffle(randomCoordinates)[0];
+  randomCoordinates = shuffle(randomCoordinates);
+  randomTitles = shuffle(randomTitles);
+  var coords = randomCoordinates[0];
   var obj = {
-    'keywords': shuffle(randomTitles)[0],
+    'keywords': randomTitles[0],
     'lat': coords[0],
     'lon': coords[1]
   };
   io.sockets.emit('search', obj);
-}, 300);
+}, 300);*/
 
 function shuffle(array) {
   var m = array.length, t, i;
