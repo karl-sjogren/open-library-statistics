@@ -3,14 +3,57 @@
   <head>
     <meta charset="utf-8">
     <title>Open Library Access Live Search Visualizer</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
     <link href="style.css" rel="stylesheet">
   </head>
   <body>
+    <div id="container">
+      
+    </div>
+    <script src="/masonry.pkgd.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      var changedItems = false;
+      var container = document.querySelector('#container');
+      var msnry = new Masonry( container, {
+        //itemSelector: '.item',
+        columnWidth: 60
+      });
+      
+      ellipsis = function(str, len) {
+        if(str.length <= len) {
+          return str;
+        }
+        
+        return str.substr(0, len - 3) + '...';
+      }
+      
+      setInterval(function() {
+        if(!changedItems) {
+          return;
+        }
+        changedItems = false;
+        
+        msnry.layout();
+      }, 5000)
+      
       var socket = io.connect();
       socket.on('search', function (data) {
-        console.log(data);
+        var div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = ellipsis(data.keywords, 32);
+        div.style.minWidth = (Math.floor(Math.random() * 150)+100) + 'px';
+        div.style.height = (Math.floor(Math.random() * 50)+50) + 'px';
+        div.style.lineHeight = div.style.height;
+        
+        container.appendChild(div);
+        msnry.appended(div);        
+        changedItems = true;
+        
+        setTimeout(function() {
+          msnry.remove(div);
+          changedItems = true;
+        }, Math.floor(Math.random()*6000) + 2000);
       });
     </script>
   </body>
