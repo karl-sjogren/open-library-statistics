@@ -1,10 +1,10 @@
 /* global require, __dirname, process */
 /*jshint indent:2 */
-require('newrelic');
+//require('newrelic');
 var express = require('express'),
     app = express(),
-    server = require('http').createServer(app),
-    io = require('socket.io').listen(server),
+    //server = require('http').createServer(app),
+    //io = require('socket.io').listen(server),
     lessMiddleware = require('less-middleware'),
     bodyParserMiddleware = require('body-parser');
 
@@ -12,7 +12,7 @@ app.use(bodyParserMiddleware());
 app.use(lessMiddleware(__dirname + '/public', {force: true, debug: true}));
 app.use(express.static(__dirname + '/public'));
 
-server.listen(Number(process.env.PORT || 4096));
+app.listen(Number(process.env.PORT || 4096));
 
 app.post('/recieve', function (req, res) {
   var body = req.body;
@@ -26,14 +26,10 @@ app.post('/recieve', function (req, res) {
     'lon': body.lon
   };
 
-  io.sockets.emit('search', obj);
+  //io.sockets.emit('search', obj);
   res.end();
 });
 
-io.enable('browser client minification');  // send minified client
-io.enable('browser client etag');          // apply etag caching logic based on version number
-io.enable('browser client gzip');          // gzip the file
-io.set('log level', 2);                    // warn
 
 //io.sockets.on('connection', function (socket) { });
 
