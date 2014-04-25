@@ -3,8 +3,8 @@
 //require('newrelic');
 var express = require('express'),
     app = express(),
-    //server = require('http').createServer(app),
-    //io = require('socket.io').listen(server),
+    server = require('http').createServer(app),
+    io = require('socket.io').listen(server),
     lessMiddleware = require('less-middleware'),
     bodyParserMiddleware = require('body-parser');
 
@@ -26,7 +26,7 @@ app.post('/recieve', function (req, res) {
     'lon': body.lon
   };
 
-  //io.sockets.emit('search', obj);
+  io.sockets.emit('search', obj);
   res.end();
 });
 
