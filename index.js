@@ -30,8 +30,8 @@ app.post('/recieve', function (req, res) {
   res.end();
 });
 
-
 //io.sockets.on('connection', function (socket) { });
+
 
 /*
 
@@ -49,7 +49,6 @@ app.post('/recieve', function (req, res) {
 
 */
 
-/*
 var randomTitles = ['Ondskan', 'Bröderna lejonhjärta', 'En sak å en annan', 'Min bok om mig', 'Isprinsessan', 'En tandläkares mardröm', 'Hur man skriver en listetta', 'Bläckfiskresan'];
 var randomCoordinates = [
   [63.829768, 20.263596], // Umeå
@@ -58,7 +57,7 @@ var randomCoordinates = [
   [63.173574, 14.660568]  // Östersund
 ];
 
-var interval = setInterval(function() {
+setInterval(function() {
   randomCoordinates = shuffle(randomCoordinates);
   randomTitles = shuffle(randomTitles);
   var coords = randomCoordinates[0];
@@ -86,4 +85,4 @@ function shuffle(array) {
   }
 
   return array;
-}*/
+}
