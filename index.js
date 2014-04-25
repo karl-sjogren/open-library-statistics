@@ -27,10 +27,8 @@ app.post('/recieve', function (req, res) {
   res.end();
 });
 
+io.set('log level', 2); // warn
 io.sockets.on('connection', function (socket) {
-//  socket.on('my other event', function (data) {
-//    console.log(data);
-//  });
 });
 
 /*
