@@ -1,4 +1,5 @@
 /* global require, console, __dirname, setInterval, process */
+/*jshint indent:2 */
 var express = require('express'),
     app = express(),
     server = require('http').createServer(app),
@@ -14,22 +15,26 @@ server.listen(Number(process.env.PORT || 4096));
 
 app.post('/recieve', function (req, res) {
   var body = req.body;
-  if(!body)
+  if(!body) {
     return;
-  
+  }
+
   var obj = {
     'keywords': body.keywords,
     'lat': body.lat,
     'lon': body.lon
   };
-  
+
   io.sockets.emit('search', obj);
   res.end();
 });
 
-io.set('log level', 2); // warn
-io.sockets.on('connection', function (socket) {
-});
+io.enable('browser client minification');  // send minified client
+io.enable('browser client etag');          // apply etag caching logic based on version number
+io.enable('browser client gzip');          // gzip the file
+io.set('log level', 2);                    // warn
+
+//io.sockets.on('connection', function (socket) { });
 
 /*
 
@@ -47,7 +52,7 @@ io.sockets.on('connection', function (socket) {
 
 */
 
-
+/*
 var randomTitles = ['Ondskan', 'Bröderna lejonhjärta', 'En sak å en annan', 'Min bok om mig', 'Isprinsessan', 'En tandläkares mardröm', 'Hur man skriver en listetta', 'Bläckfiskresan'];
 var randomCoordinates = [
   [63.829768, 20.263596], // Umeå
@@ -55,7 +60,7 @@ var randomCoordinates = [
   [57.718819, 12.944641], // Borås
   [63.173574, 14.660568]  // Östersund
 ];
-/*
+
 var interval = setInterval(function() {
   randomCoordinates = shuffle(randomCoordinates);
   randomTitles = shuffle(randomTitles);
@@ -66,7 +71,7 @@ var interval = setInterval(function() {
     'lon': coords[1]
   };
   io.sockets.emit('search', obj);
-}, 300);*/
+}, 300);
 
 function shuffle(array) {
   var m = array.length, t, i;
@@ -84,4 +89,4 @@ function shuffle(array) {
   }
 
   return array;
-}
+}*/
