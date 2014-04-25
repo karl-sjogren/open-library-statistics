@@ -48,7 +48,7 @@ app.post('/recieve', function (req, res) {
 }
 
 */
-
+/*
 var randomTitles = ['Ondskan', 'Bröderna lejonhjärta', 'En sak å en annan', 'Min bok om mig', 'Isprinsessan', 'En tandläkares mardröm', 'Hur man skriver en listetta', 'Bläckfiskresan'];
 var randomCoordinates = [
   [63.829768, 20.263596], // Umeå
@@ -85,4 +85,4 @@ function shuffle(array) {
   }
 
   return array;
-}
+}*/
