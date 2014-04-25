@@ -1,5 +1,6 @@
-/* global require, console, __dirname, setInterval, process */
+/* global require, __dirname, process */
 /*jshint indent:2 */
+require('newrelic');
 var express = require('express'),
     app = express(),
     server = require('http').createServer(app),
