@@ -1,5 +1,11 @@
 /* global require, __dirname, process, setInterval */
 /*jshint indent:2 */
+
+var fs = require('fs');
+if(fs.existsSync('.env')) {
+  var env = require('./.env')(); // Setup custom environment
+}
+
 require('newrelic');
 var express = require('express'),
     app = express(),
@@ -30,26 +36,8 @@ app.post('/recieve', function (req, res) {
   res.end();
 });
 
-//io.sockets.on('connection', function (socket) { });
 
-
-/*
-
-{
-  "keywords": "ondskan",
-  "lat": null,
-  "lon": null
-}
-
-{
-  "keywords": "ondskan",
-  "lat": "64.263684",
-  "lon": "20.302734"
-}
-
-*/
-
-if(process.env.NODE_ENV !== 'production') {
+if(process.env.NODE_ENV === 'development') {
   var shuffle = function(array) {
     var m = array.length, t, i;
 
