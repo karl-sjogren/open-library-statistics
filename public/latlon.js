@@ -104,7 +104,7 @@ LatLon.prototype.finalBearingTo = function(point) {
           Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
   var brng = Math.atan2(y, x);
           
-  // ... & reverse it by adding 180Â°
+  // ... & reverse it by adding 180Ã‚Â°
   return (brng.toDeg()+180) % 360;
 }
 
@@ -127,7 +127,7 @@ LatLon.prototype.midpointTo = function(point) {
   lat3 = Math.atan2(Math.sin(lat1)+Math.sin(lat2),
                     Math.sqrt( (Math.cos(lat1)+Bx)*(Math.cos(lat1)+Bx) + By*By) );
   lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
-  lon3 = (lon3+3*Math.PI) % (2*Math.PI) - Math.PI;  // normalise to -180..+180Âº
+  lon3 = (lon3+3*Math.PI) % (2*Math.PI) - Math.PI;  // normalise to -180..+180Ã‚Âº
   
   return new LatLon(lat3.toDeg(), lon3.toDeg());
 }
@@ -153,7 +153,7 @@ LatLon.prototype.destinationPoint = function(brng, dist) {
                         Math.cos(lat1)*Math.sin(dist)*Math.cos(brng) );
   var lon2 = lon1 + Math.atan2(Math.sin(brng)*Math.sin(dist)*Math.cos(lat1), 
                                Math.cos(dist)-Math.sin(lat1)*Math.sin(lat2));
-  lon2 = (lon2+3*Math.PI) % (2*Math.PI) - Math.PI;  // normalise to -180..+180Âº
+  lon2 = (lon2+3*Math.PI) % (2*Math.PI) - Math.PI;  // normalise to -180..+180Ã‚Âº
 
   return new LatLon(lat2.toDeg(), lon2.toDeg());
 }
@@ -216,7 +216,7 @@ LatLon.intersection = function(p1, brng1, p2, brng2) {
   dLon13 = Math.atan2( Math.sin(brng13)*Math.sin(dist13)*Math.cos(lat1), 
                        Math.cos(dist13)-Math.sin(lat1)*Math.sin(lat3) );
   lon3 = lon1+dLon13;
-  lon3 = (lon3+3*Math.PI) % (2*Math.PI) - Math.PI;  // normalise to -180..+180Âº
+  lon3 = (lon3+3*Math.PI) % (2*Math.PI) - Math.PI;  // normalise to -180..+180Ã‚Âº
   
   return new LatLon(lat3.toDeg(), lon3.toDeg());
 }
@@ -241,7 +241,7 @@ LatLon.prototype.rhumbDistanceTo = function(point) {
   var dPhi = Math.log(Math.tan(lat2/2+Math.PI/4)/Math.tan(lat1/2+Math.PI/4));
   var q = (isFinite(dLat/dPhi)) ? dLat/dPhi : Math.cos(lat1);  // E-W line gives dPhi=0
   
-  // if dLon over 180Â° take shorter rhumb across anti-meridian:
+  // if dLon over 180Ã‚Â° take shorter rhumb across anti-meridian:
   if (Math.abs(dLon) > Math.PI) {
     dLon = dLon>0 ? -(2*Math.PI-dLon) : (2*Math.PI+dLon);
   }
@@ -278,7 +278,7 @@ LatLon.prototype.rhumbBearingTo = function(point) {
  */
 LatLon.prototype.rhumbDestinationPoint = function(brng, dist) {
   var R = this._radius;
-  var d = parseFloat(dist)/R;  // d = angular distance covered on earthâ€™s surface
+  var d = parseFloat(dist)/R;  // d = angular distance covered on earthÃ¢â‚¬â„¢s surface
   var lat1 = this._lat.toRad(), lon1 = this._lon.toRad();
   brng = brng.toRad();
 
@@ -320,7 +320,7 @@ LatLon.prototype.rhumbMidpointTo = function(point) {
   
   if (!isFinite(lon3)) lon3 = (lon1+lon2)/2; // parallel of latitude
   
-  lon3 = (lon3+3*Math.PI) % (2*Math.PI) - Math.PI;  // normalise to -180..+180Âº
+  lon3 = (lon3+3*Math.PI) % (2*Math.PI) - Math.PI;  // normalise to -180..+180Ã‚Âº
   
   return new LatLon(lat3.toDeg(), lon3.toDeg());
 }
