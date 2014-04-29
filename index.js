@@ -12,7 +12,8 @@ var express = require('express'),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server),
     lessMiddleware = require('less-middleware'),
-    bodyParserMiddleware = require('body-parser');
+    bodyParserMiddleware = require('body-parser'),
+    save = require('./save_statistics');
 
 app.use(bodyParserMiddleware());
 app.use(lessMiddleware(__dirname + '/public', {force: true, debug: true}));
@@ -25,6 +26,13 @@ app.post('/recieve', function (req, res) {
   if(!body) {
     return;
   }
+  
+  var opts = {
+    type: 'search',
+    keyword: body.keywords
+  };
+  
+  save(opts);
 
   var obj = {
     'keywords': body.keywords,
