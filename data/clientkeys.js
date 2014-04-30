@@ -18,8 +18,8 @@ module.exports.getByKey = function(options) {
         deferred.reject(err);
         return;
       }
-      deferred.resolve(doc);
       db.close();
+      deferred.resolve(doc);
     });
   });
   
@@ -48,8 +48,8 @@ module.exports.create = function(options) {
         deferred.reject(err);
         return;
       }
-      deferred.resolve(doc);
       db.close();
+      deferred.resolve(doc);
     });
   });
   
@@ -69,8 +69,8 @@ module.exports.list = function() {
         deferred.reject(err);
         return;
       }
-      deferred.resolve(docs);
       db.close();
+      deferred.resolve(docs);
     });
   });
   

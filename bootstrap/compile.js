@@ -1,7 +1,9 @@
 /* global module, require, console, Buffer */
 var less = require('less'),
     UglifyJS = require('uglify-js'),
-    fs = require('fs');
+    fs = require('fs'),
+    ncp = require('ncp').ncp,
+    Q = require('q');
 
 module.exports.less = function() {
   if(!fs.existsSync('./bootstrap/compiled/')) {
@@ -18,20 +20,22 @@ module.exports.less = function() {
     filename: 'style.less' // Specify a filename, for better error messages
   });
 
+  var deferred = Q.defer();
   parser.parse(srcCode, function(parse_err, tree) {
     if (parse_err) {
       console.log(parse_err);
     }
 
-    //var minifyOptions = _.pick(options, lessOptions.render);
+    var css = tree.toCSS({ compress: true });
+    fs.writeFile('./bootstrap/compiled/styles/bootstrap.css', css, 'utf8', function(err) {
+      if (err) {
+        console.log(err);
+      }
+      deferred.resolve();      
+    });
 
-    try {
-      var css = tree.toCSS({ compress: true });
-      fs.writeFileSync('./bootstrap/compiled/styles/bootstrap.css', css, 'utf8');
-    } catch (e) {
-      console.log(e);
-    }
   });
+  return deferred.promise;
 };
 
 module.exports.js = function() {
@@ -49,11 +53,31 @@ module.exports.js = function() {
     files.push(path + file);
   });
 
-  try {
-    var result = UglifyJS.minify(files);
-    //fs.writeSync('./bootstrap/compiled/js/bootstrap.js', new Buffer(result.code));
-    fs.writeFileSync('./bootstrap/compiled/js/bootstrap.js', result.code, 'utf8');
-  } catch (e) {
-    console.log(e);
+  var deferred = Q.defer();
+  var result = UglifyJS.minify(files);
+  fs.writeFile('./bootstrap/compiled/js/bootstrap.js', result.code, 'utf8', function(err) {
+    if (err) {
+      console.log(err);
+    }
+    deferred.resolve();      
+  });
+
+  return deferred.promise;
+};
+
+module.exports.fonts = function() {
+  if(!fs.existsSync('./bootstrap/compiled/')) {
+    fs.mkdirSync('./bootstrap/compiled/');
   }
+
+  var deferred = Q.defer();
+
+  ncp.limit = 16;
+  ncp('./bootstrap/fonts/', './bootstrap/compiled/fonts/', function (err) {
+    if (err) {
+      console.log(err);
+    }
+    deferred.resolve();
+  });
+  return deferred.promise;
 };
