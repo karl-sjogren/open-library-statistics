@@ -13,69 +13,18 @@ var express = require('express'),
     io = require('socket.io').listen(server),
     lessMiddleware = require('less-middleware'),
     bodyParserMiddleware = require('body-parser'),
-    save = require('./save_statistics');
+    basicAuth = require('./middleware/basicauth');
+
+io.set('log level', 1);
 
 app.use(bodyParserMiddleware());
-app.use(lessMiddleware(__dirname + '/public', {force: true, debug: true}));
-app.use(express.static(__dirname + '/public'));
+app.use('/', basicAuth(function (user, password) {
+    return user === process.env.AUTH_USER && password == process.env.AUTH_PASSWORD;
+  }, "Open Library Statistics"));
+
+app.use('/', lessMiddleware(__dirname + '/public', {force: true, debug: true}));
+app.use('/', express.static(__dirname + '/public'));
 
 server.listen(Number(process.env.PORT || 4096));
 
-app.post('/recieve', function (req, res) {
-  var body = req.body;
-  if(!body) {
-    return;
-  }
-  
-  var opts = {
-    type: 'search',
-    keyword: body.keywords
-  };
-  
-  save(opts);
-
-  var obj = {
-    'keywords': body.keywords,
-    'lat': body.lat,
-    'lon': body.lon
-  };
-
-  io.sockets.emit('search', obj);
-  res.end();
-});
-
-
-if(process.env.NODE_ENV === 'development') {
-  var shuffle = function(array) {
-    var m = array.length, t, i;
-
-    while (m) {
-      i = Math.floor(Math.random() * m--);
-      t = array[m];
-      array[m] = array[i];
-      array[i] = t;
-    }
-
-    return array;
-  };
-  
-  var randomTitles = ['Ondskan', 'Bröderna lejonhjärta', 'En sak å en annan', 'Min bok om mig', 'Isprinsessan', 'En tandläkares mardröm', 'Hur man skriver en listetta', 'Bläckfiskresan'];
-  var randomCoordinates = [
-    [63.829768, 20.263596], // Umeå
-    [63.093516, 21.676025], // Vasa
-    [57.718819, 12.944641], // Borås
-    [63.173574, 14.660568]  // Östersund
-  ];
-
-  setInterval(function() {
-    randomCoordinates = shuffle(randomCoordinates);
-    randomTitles = shuffle(randomTitles);
-    var coords = randomCoordinates[0];
-    var obj = {
-      'keywords': randomTitles[0],
-      'lat': coords[0],
-      'lon': coords[1]
-    };
-    io.sockets.emit('search', obj);
-  }, 300);  
-}
+require('./routes/index.js')(app, io);

@@ -11,5 +11,11 @@ var opts = {
   keyword: 'Ondskan'
 };
 
-var save = require('./save_statistics');
-save(opts);
+var ObjectID = require('mongodb').ObjectID;
+
+for(var i = 0; i < 100; i++) {
+  console.log(new ObjectID(Math.random() * 1000000000).toHexString() + '\r\n');
+}
+
+//var statistics = require('./statistics');
+//statistics.save(opts);

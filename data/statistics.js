@@ -1,8 +1,9 @@
-var MongoClient = require('mongodb').MongoClient,
+/* global require, module, console */
+var Client = require('./index.js'),
   Q = require('q');
 
-module.exports = function(options) {
-  MongoClient.connect(process.env.MONGOLAB_URI, function(err, db) {
+module.exports.save = function(options) {
+  Client(function(err, db) {
     if(err)
       throw err;
 
@@ -14,11 +15,9 @@ module.exports = function(options) {
       keyword: options.keyword || ''
     };
 
-    var actions = db.collection('actions');
-
-    var updateHours = require('./updates/hours');
-    var updateDays = require('./updates/days');
-    var updateKeywords = require('./updates/keywords');
+    var updateHours = require('./statistics/hours');
+    var updateDays = require('./statistics/days');
+    var updateKeywords = require('./statistics/keywords');
 
     Q.all([updateHours(db, opts), updateDays(db, opts), updateKeywords(db, opts)]).then(function() {
       console.log('All updates done, closing database');
