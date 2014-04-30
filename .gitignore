@@ -26,3 +26,6 @@ node_modules
 
 # Custom environment for development
 .env
+
+# Bootstrap compiled sources
+bootstrap/compiled
