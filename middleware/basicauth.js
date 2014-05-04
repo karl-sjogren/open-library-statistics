@@ -1,4 +1,4 @@
-/* global module, require, process */
+/* global module, require, process, console, Buffer */
 
 module.exports = function basicAuth(callback, realm) {
   realm = realm || 'Authorization Required';
@@ -12,9 +12,10 @@ module.exports = function basicAuth(callback, realm) {
     var authorization = req.headers.authorization;
 
     if (!authorization) {
-      unauthorized(res);
+      return unauthorized(res);
     }
     
+
     var parts = authorization.split(' ');
     var scheme = parts[0];
 

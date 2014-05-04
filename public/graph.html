@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Open Library Access Live Search Visualizer</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+    <link href="style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="container">
+      
+    </div>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+    <script src="/js/hummingbird.base.js"></script>
+    <script src="/js/hummingbird.graph.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect();
+      socket.on('search', function (data) { });
+      $("#container").hummingbirdGraph(socket,
+         {
+           from: "view_totals",
+           bgLineColor: "#514e57",
+           tickLineColor: "#64616a",
+           lineColors: {
+             def: "#ac84ed"
+           },
+           graphHeight: 80
+         });
+    </script>
+  </body>
+</html>
