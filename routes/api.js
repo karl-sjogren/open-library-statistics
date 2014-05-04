@@ -4,7 +4,7 @@
 var clientKeys = require('../data/clientkeys');
 
 module.exports = function(app, io) {
-  app.get('/clientkeys/', function (req, res) {
+  app.get('/api/clientkeys/', function (req, res) {
     var body = req.body;
     if(!body) {
       return;
@@ -12,7 +12,13 @@ module.exports = function(app, io) {
 
     clientKeys.list().then(function(docs) {
       res.json(docs);
-      res.end();
     });    
+  });
+  
+  app.post('/api/clientkeys/', function (req, res) {
+    var body = req.body;
+    if(!body) {
+      return;
+    }
   });
 };
