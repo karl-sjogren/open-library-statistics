@@ -1,4 +1,5 @@
 /* global require, module, console */
+/* jshint indent:2 */
 var Client = require('./index.js'),
     ObjectID = require('mongodb').ObjectID,
     Q = require('q');
@@ -11,10 +12,10 @@ module.exports.getByKey = function(options) {
 
     options = options || { };
 
-    var collection = db.collection('clientKeys');
+    var collection = db.collection('clientInstances');
     collection.findOne({clientKey: options.clientKey}, function(err, doc) {
       if(err) {
-        console.log('Failed retrieveing document');
+        console.log('Failed retrieving instance');
         deferred.reject(err);
         return;
       }
@@ -41,10 +42,10 @@ module.exports.create = function(options) {
       longitude: options.longitude || 0
     };
 
-    var collection = db.collection('clientKeys');
+    var collection = db.collection('clientInstances');
     collection.insert([opts], function(err, doc) {
       if(err) {
-        console.log('Failed creating document');
+        console.log('Failed retrieving instances');
         deferred.reject(err);
         return;
       }
@@ -62,15 +63,17 @@ module.exports.list = function() {
     if(err)
       throw err;
 
-    var collection = db.collection('clientKeys');
+    var collection = db.collection('clientInstances');
     collection.find(function(err, docs) {
       if(err) {
         console.log('Failed retrieveing documents');
         deferred.reject(err);
         return;
       }
-      db.close();
-      deferred.resolve(docs);
+      docs.toArray(function(err, arr) {
+        deferred.resolve(arr);
+        db.close();
+      });
     });
   });
   

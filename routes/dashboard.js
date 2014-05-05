@@ -2,10 +2,12 @@
 /* jshint indent:2 */
 
 var statistics = require('../data/statistics');
-var clientKeys = require('../data/clientkeys');
+var clientInstances = require('../data/client-instances');
 
 module.exports = function(app, io) {
   app.get('/dashboard', function (req, res) {
-    res.render('dashboard', { title: 'Dashboard' });
+    clientInstances.list().then(function(docs) {
+      res.render('dashboard', { title: 'Dashboard', instances: docs });
+    });
   });
 };

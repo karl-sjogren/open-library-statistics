@@ -2,7 +2,7 @@
 /* jshint indent:2 */
 
 var statistics = require('../data/statistics');
-var clientKeys = require('../data/clientkeys');
+var clientInstances = require('../data/client-instances');
 var promiseFor = require('../helpers/promise-for');
 var Q = require('q');
 
@@ -37,7 +37,7 @@ module.exports = function(app, io) {
       var done = Q.defer();
 
       var clientKey = item.clientKey;
-      clientKeys.getByKey({clientKey: clientKey}).then(function(client) {
+      clientInstances.getByKey({clientKey: clientKey}).then(function(client) {
         if(!client) {
           console.log('Invalid clientKey specified: ' + clientKey);
           return done.reject('Invalid clientKey specified: ' + clientKey);

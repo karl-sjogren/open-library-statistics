@@ -1,21 +1,21 @@
 /* global require, module */
 /*jshint indent:2 */
 
-var clientKeys = require('../data/clientkeys');
+var clientInstances = require('../data/client-instances');
 
 module.exports = function(app, io) {
-  app.get('/api/clientkeys/', function (req, res) {
+  app.get('/api/instances/', function (req, res) {
     var body = req.body;
     if(!body) {
       return;
     }
 
-    clientKeys.list().then(function(docs) {
+    clientInstances.list().then(function(docs) {
       res.json(docs);
     });    
   });
   
-  app.post('/api/clientkeys/', function (req, res) {
+  app.post('/api/instances/', function (req, res) {
     var body = req.body;
     if(!body) {
       return;

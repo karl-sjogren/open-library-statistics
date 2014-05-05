@@ -28,13 +28,12 @@ Q.all([compile.less(), compile.js(), compile.fonts()]).then(function() {
 
   // Setup middleware functions, the order is important here!
   app.use(bodyParserMiddleware());
-  /*app.use('/', basicAuth(function (user, password) {
+  app.use('/', basicAuth(function (user, password) {
       return user === process.env.AUTH_USER && password == process.env.AUTH_PASSWORD;
-    }, 'Open Library Statistics Alpha'));*/
+    }, 'Open Library Statistics Alpha'));
 
   app.set('views', __dirname + '/views');
   app.set('view engine', 'hbs');
-//  app.engine('hbs', require('hbs').__express);
   
   app.use('/', lessMiddleware(__dirname + '/public', { force: true, debug: true }));
   app.use('/', express.static(__dirname + '/public'));
