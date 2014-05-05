@@ -1,0 +1,22 @@
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Key</th>
+                  <th>CPU Usage</th>
+                  <th>Memory Usage</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each instances}}
+                <tr>
+                  <td>{{name}}</td>
+                  <td><a href="/instances/edit/{{clientKey}}">{{clientKey}}</a></td>
+                  <td>-%</td>
+                  <td>-%</td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>

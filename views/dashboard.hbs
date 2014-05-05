@@ -21,26 +21,5 @@
             </div>
           </div>
 
-          <h2 class="sub-header">OLA Instances <a href="/instances/add" title="Add new instance"><span class="glyphicon glyphicon-plus"></span></a></h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Key</th>
-                  <th>Name</th>
-                  <th>CPU Usage</th>
-                  <th>Memory Usage</th>
-                </tr>
-              </thead>
-              <tbody>
-                {{#each instances}}
-                <tr>
-                  <td>{{clientKey}}</td>
-                  <td>{{name}}</td>
-                  <td>-%</td>
-                  <td>-%</td>
-                </tr>
-                {{/each}}
-              </tbody>
-            </table>
-          </div>
+          <h2 class="sub-header">OLA Instances <a href="/instances/add" title="Add new instance" class="pull-right"><span class="glyphicon glyphicon-plus"></span></a></h2>
+{{> instance-list }}
