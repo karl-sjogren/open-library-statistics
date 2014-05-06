@@ -1,5 +1,5 @@
 /* global module, require, console */
-
+/* jshint indent:2 */
 var Q = require('q');
 
 module.exports = function(arr, body) {
@@ -11,9 +11,6 @@ module.exports = function(arr, body) {
   function loop() {
     if (index >= arr.length) return done.resolve({ success: success, failures: failures });
     
-    // Use `when`, in case `body` does not return a promise.
-    // When it completes loop again otherwise, if it fails, reject the
-    // done promise
     var item = arr[index];
     var idx = index++;
     

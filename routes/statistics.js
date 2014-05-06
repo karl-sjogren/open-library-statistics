@@ -31,8 +31,10 @@ module.exports = function(app, io) {
     
     if(!Array.isArray(body)) {
       console.log('Legacy, non-array, message recieved.');
+      console.log(body);
       body = [body];
     }
+    
     promiseFor(body, function(idx, item) {
       var done = Q.defer();
 
@@ -42,25 +44,20 @@ module.exports = function(app, io) {
           console.log('Invalid clientKey specified: ' + clientKey);
           return done.reject('Invalid clientKey specified: ' + clientKey);
         }
-        /*
-        var opts = {
-          type: 'search',
-          keyword: body.keywords
-        };
 
-        statistics.save(opts);
+        statistics.save(item).then(function() {
+          if(!!item.type && item.type.toLowerCase().indexOf('search') !== -1) {
+            var obj = {
+              'keywords': item.freeText,
+              'lat': client.latitude,
+              'lon': client.longitude
+            };
 
-        var obj = {
-          'keywords': body.keywords,
-          'lat': client.latitude,
-          'lon': client.longitude
-        };
-
-        io.sockets.emit('search', obj);
-        */
-        done.resolve();
+            io.sockets.emit('search', obj);
+          }
+          done.resolve();
+        });
       });
-      
       
       return done.promise;
     }).then(function(results) {

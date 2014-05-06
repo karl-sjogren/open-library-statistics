@@ -1,27 +1,32 @@
 /* global require, module, console */
+/* jshint indent:2 */
 var Client = require('./index.js'),
     Q = require('q'),
     strftime = require('strftime');
 
 function save(item) {
-
-  if(!item || !item.type || !item.date || !item.clientKey) {
-    return console.log('An invalid item was passed to save.');
+  var done = Q.defer();
+  if(!item || !item.type || !item.timeStamp || !item.clientKey) {
+    console.log('An invalid item was passed to save.');
+    done.reject('An invalid item was passed to save.');
   }
   
   switch(item.type.toLowerCase()) {
+    case 'worksetsearch':
+    case 'worksearch':
     case 'search':
-      return saveSearch(item);
+      saveSearch(item, done);
+      break;
     case 'performance':
-      return savePerformance(item);
-    case 'performance':
-      return savePerformance(item);
+      savePerformance(item, done);
+      break;
     default:
-      return console.log('An invalid type was supplied: ' + item.type.toLowerCase());
+      console.log('An invalid type was supplied: ' + item.type.toLowerCase());
   }
+  return done.promise;
 }
 
-function saveSearch(item) {
+function saveSearch(item, done) {
   Client(function(err, db) {
     if(err)
       throw err;
@@ -29,7 +34,7 @@ function saveSearch(item) {
     item = item || { };
     
     var opts = {
-      date: new Date(),
+      date: new Date(item.timeStamp),
       type: item.type || '',
       keyword: item.keyword || ''
     };
@@ -41,11 +46,12 @@ function saveSearch(item) {
     Q.all([updateHours(db, opts), updateDays(db, opts), updateKeywords(db, opts)]).then(function() {
       console.log('All updates done, closing database');
       db.close();
+      done.resolve();
     });  
   });
 }
 
-function savePerformance(item) {
+function savePerformance(item, done) {
   Client(function(err, db) {
     if(err)
       throw err;
@@ -53,7 +59,7 @@ function savePerformance(item) {
     item = item || { };
     
     var doc = {
-      date: item.date,
+      date: new Date(item.timeStamp),
       cpuUsage: item.cpuUsage,
       availableMemory: item.availableMemory,
       totalMemory: item.totalMemory,
@@ -62,18 +68,22 @@ function savePerformance(item) {
     
     var update = {$push: { 'updates': doc }};
 
-    var collection = db.collection('actions');
+    var collection = db.collection('performance');
     collection.update({ date: strftime('%Y-%m-%d', item.date), clientKey: item.clientKey }, update, { upsert: true, safe: true }, function(err, docs) {
       if(err) {
         console.log('Failed updating performance');
         return;
       }
-      else
+      else {
         console.log('Updated performance');
+      }
+      
       db.close();
+      done.resolve();
     });
   });
 }
 
 module.exports.save = save;
 module.exports.saveSearch = saveSearch;
+module.exports.savePerformance = savePerformance;
