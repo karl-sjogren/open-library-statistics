@@ -10,11 +10,11 @@
               </thead>
               <tbody>
                 {{#each instances}}
-                <tr>
+                <tr data-client-key="{{clientKey}}">
                   <td>{{name}}</td>
                   <td><a href="/instances/edit/{{clientKey}}">{{clientKey}}</a></td>
-                  <td>-%</td>
-                  <td>-%</td>
+                  <td class="cpu-usage">-%</td>
+                  <td class="memory-usage">-%</td>
                 </tr>
                 {{/each}}
               </tbody>

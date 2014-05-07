@@ -47,13 +47,23 @@ module.exports = function(app, io) {
 
         statistics.save(item).then(function() {
           if(!!item.type && item.type.toLowerCase().indexOf('search') !== -1) {
-            var obj = {
+            var search = {
               'keywords': item.freeText,
               'lat': client.latitude,
               'lon': client.longitude
             };
 
-            io.sockets.emit('search', obj);
+            io.sockets.emit('search', search);
+          } else if(item.type.toLowerCase() === 'performance') {
+            var perf = {
+              clientKey: item.clientKey,
+              cpuUsage: item.cpuUsage,
+              availableMemory: item.availableMemory,
+              totalMemory: item.totalMemory,
+              memoryUsage: item.memoryUsage
+            };
+
+            io.sockets.emit('performance', perf);
           }
           done.resolve();
         });
