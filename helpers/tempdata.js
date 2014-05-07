@@ -33,5 +33,14 @@ module.exports = function(app, io) {
       'lon': coords[1]
     };
     io.sockets.emit('search', obj);
+    
+    var perf = {
+      availableMemory: 1751,
+      clientKey: '0547fa3bd80c485c439bf42d',
+      cpuUsage: 100*Math.random(),
+      memoryUsage: 100*Math.random(),
+      totalMemory: 8191
+    }
+    io.sockets.emit('performance', perf);
   }, 300);
 }
