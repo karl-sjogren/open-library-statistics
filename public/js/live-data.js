@@ -11,6 +11,6 @@ $(document).ready(function() {
     
     var row = $('*[data-client-key="' + clientKey + '"]');
     row.find('.cpu-usage').html(Math.floor(data.cpuUsage) + '%');
-    row.find('.memory-usage').html(Math.floor(data.memoryUsage) + '% (' + data.availableMemory + '/' + data.totalMemory + ' MB)');
+    row.find('.memory-usage').html(Math.floor(data.memoryUsage) + '% (' + (data.totalMemory - data.availableMemory) + '/' + data.totalMemory + ' MB)');
   });
 });
