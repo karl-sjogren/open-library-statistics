@@ -77,10 +77,21 @@ $(function() {
       }
     });
 
-    setInterval(function updateRandom() {
+    function draw() {
       series[0].data = formatData();
       plot.setData(series);
       plot.draw();
-    }, 400);
+    }
+    
+    setInterval(draw, 400);
+    
+    $(window).resize(function() {
+      if (container.width() == 0 || container.height() == 0)
+          return;
+
+      plot.resize();
+      plot.setupGrid();
+      plot.draw();
+    });
   });
 });
