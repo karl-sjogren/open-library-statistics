@@ -20,6 +20,9 @@ function save(item) {
     case 'performance':
       savePerformance(item, done);
       break;
+    case 'dataminerstats':
+      saveMinerStats(item, done);
+      break;
     default:
       console.log('An invalid type was supplied: ' + item.type.toLowerCase());
   }
@@ -84,6 +87,40 @@ function savePerformance(item, done) {
   });
 }
 
+function saveMinerStats(item, done) {
+  Client(function(err, db) {
+    if(err)
+      throw err;
+
+    item = item || { };
+    
+    var doc = {
+      date: new Date(item.timeStamp),
+      minerName: item.minerName,
+      lastScan: item.lastScan,
+      scannedWorksPerMinute: item.scannedWorksPerMinute,
+      lastScannedId: item.lastScannedId
+    };
+    
+    var update = {$push: { 'stats': doc }};
+
+    var collection = db.collection('dataminerstats');
+    collection.update({ date: strftime('%Y-%m-%d', item.date), clientKey: item.clientKey, catalogId: item.catalogId, catalogName: item.catalogName }, update, { upsert: true, safe: true }, function(err, docs) {
+      if(err) {
+        console.log('Failed updating dataminerstats');
+        return;
+      }
+      else {
+        console.log('Updated dataminerstats');
+      }
+      
+      db.close();
+      done.resolve();
+    });
+  });
+}
+
 module.exports.save = save;
 module.exports.saveSearch = saveSearch;
 module.exports.savePerformance = savePerformance;
+module.exports.saveMinerStats = saveMinerStats;
