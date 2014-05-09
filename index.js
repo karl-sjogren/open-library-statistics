@@ -17,9 +17,6 @@ var express = require('express'),
     error = require('./middleware/error'),
     Q = require('q');
 
-// Set a better loglevel for socket.io so we don't get spammed
-io.set('log level', 1);
-
 // Precompile bootstrap sources and wait with loading the rest
 var compile = require('./bootstrap/compile');
 
@@ -44,6 +41,12 @@ Q.all([compile.less(), compile.js(), compile.fonts()]).then(function() {
   
   if(process.env.NODE_ENV === 'development') {
     require('./helpers/tempdata.js')(app, io); // Load the tempdata-provider
+    io.set('log level', 1);
+  } else {
+    io.enable('browser client minification');
+    io.enable('browser client etag');
+    io.enable('browser client gzip');
+    io.set('log level', 1); 
   }
   
   var port = Number(process.env.PORT || 4096);
