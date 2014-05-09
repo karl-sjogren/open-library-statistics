@@ -1,0 +1,47 @@
+          <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="js/holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>Searches</h4>
+              <span class="text-muted">Searches/minute</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="js/holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>Logins</h4>
+              <span class="text-muted">Logins/minute</span>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+              <div class="map-canvas" data-maps-zoom="14" data-maps-latitude="{{latitude}}" data-maps-longitude="{{longitude}}"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12 col-sm-6">
+              <h2 class="sub-header">CPU usage</h2>
+              <div class="cpu-graph large-graph" data-client-key="{{clientKey}}"></div>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+              <h2 class="sub-header">Memory usage</h2>
+              <div class="memory-graph large-graph" data-client-key="{{clientKey}}"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12 col-sm-6">
+              <h2 class="sub-header">Live searches</h2>
+              <div class="cpu-graph large-graph" data-client-key="{{clientKey}}"></div>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+              <h2 class="sub-header">Live logins</h2>
+              <div class="memory-graph large-graph" data-client-key="{{clientKey}}"></div>
+            </div>
+          </div>
+
+<script>
+  (function() {
+    if(!window.dashboard) {
+      window.dashboard = {};
+    }
+
+    window.dashboard.clientKey = '{{clientKey}}';
+  })();
+</script>

@@ -48,6 +48,10 @@
           <ul class="nav nav-sidebar">
             <li><a href="/dashboard">Dashboard</a></li>
             <li><a href="/instances">Instances</a></li>
+          {{#each instances}}
+            <li class="sub-nav"><a href="/instances/dashboard/{{clientKey}}">{{name}}</a></li>
+          {{/each}}
+            
           </ul>
           <ul class="nav nav-sidebar">
             <li class="disabled"><a href="#">Visualizations</a></li>
@@ -56,19 +60,24 @@
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">{{title}}</h1>
+          <h1 class="page-header">{{title}} <small>{{subTitle}}</small></h1>
           {{{body}}}
         </div>
       </div>
     </div>
 
     <script src="/js/jquery-2.1.0.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.js"></script>
     <script src="/js/excanvas.min.js"></script>
     <script src="/js/jquery.flot.min.js"></script>
     <script src="/js/jquery.flot.resize.min.js"></script>
     <script src="/js/holder.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    {{#if googleMapsKey}}
+    <script src="https://maps.googleapis.com/maps/api/js?key={{googleMapsKey}}&sensor=false"></script>
+    {{/if}}
+    <script src="/js/comp.perfgraphs.js"></script>
+    <script src="/js/comp.maps.js"></script>
     <script src="/js/live-data.js"></script>
   </body>
 </html>
