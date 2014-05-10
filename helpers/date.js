@@ -14,6 +14,7 @@ var nextStep = function(num, step, max) {
 
 var removeSeconds = function(date) {
   date.setSeconds(0);
+  date.setMilliseconds(0);
   return date;
 };
 

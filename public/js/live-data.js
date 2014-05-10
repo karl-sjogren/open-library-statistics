@@ -17,11 +17,11 @@ $(document).ready(function() {
     var cpuGraph = $('.cpu-graph[data-client-key="' + clientKey + '"]');
     var cpuData = cpuGraph.data('graph');
     cpuData.push(Math.floor(data.cpuUsage));
-    cpuGraph.data('graph', cpuData)
+    cpuGraph.data('graph', cpuData);
 
     var memoryGraph = $('.memory-graph[data-client-key="' + clientKey + '"]');
     var memoryData = memoryGraph.data('graph');
     memoryData.push(Math.floor(data.memoryUsage));
-    memoryGraph.data('graph', memoryData)
+    memoryGraph.data('graph', memoryData);
   });
 });
