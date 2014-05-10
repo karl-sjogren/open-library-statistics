@@ -1,6 +1,7 @@
 /* global require, module, console */
 /* jshint indent:2 */
-var Client = require('./index.js'),
+var Client = require('./index'),
+    dateHelpers = require('./../helpers/date'),
     Q = require('q'),
     strftime = require('strftime');
 
@@ -10,7 +11,7 @@ function save(item) {
     console.log('An invalid item was passed to save.');
     done.reject('An invalid item was passed to save.');
   }
-  
+
   switch(item.type.toLowerCase()) {
     case 'worksetsearch':
     case 'worksearch':
@@ -35,7 +36,7 @@ function saveSearch(item, done) {
       throw err;
 
     item = item || { };
-    
+
     var opts = {
       date: new Date(item.timeStamp),
       type: item.type || '',
@@ -60,7 +61,7 @@ function savePerformance(item, done) {
       throw err;
 
     item = item || { };
-    
+
     var doc = {
       date: new Date(item.timeStamp),
       cpuUsage: item.cpuUsage,
@@ -68,7 +69,7 @@ function savePerformance(item, done) {
       totalMemory: item.totalMemory,
       memoryUsage: item.memoryUsage
     };
-    
+
     var update = {$push: { 'updates': doc }};
 
     var collection = db.collection('performance');
@@ -80,7 +81,7 @@ function savePerformance(item, done) {
       else {
         console.log('Updated performance');
       }
-      
+
       db.close();
       done.resolve();
     });
@@ -93,29 +94,45 @@ function saveMinerStats(item, done) {
       throw err;
 
     item = item || { };
-    
+
+    var date = dateHelpers.removeSeconds(dateHelpers.nextFiveMinute(new Date(item.timeStamp)));
+
+    var query = { date: strftime('%Y-%m-%d', item.date), clientKey: item.clientKey, catalogId: item.catalogId, catalogName: item.catalogName };
+
     var doc = {
-      date: new Date(item.timeStamp),
+      date: date,
       minerName: item.minerName,
       lastScan: item.lastScan,
       scannedWorksPerMinute: item.scannedWorksPerMinute,
       lastScannedId: item.lastScannedId
     };
-    
-    var update = {$push: { 'stats': doc }};
+
+    var update = { $pull: { stats: { date: date } } };
 
     var collection = db.collection('dataminerstats');
-    collection.update({ date: strftime('%Y-%m-%d', item.date), clientKey: item.clientKey, catalogId: item.catalogId, catalogName: item.catalogName }, update, { upsert: true, safe: true }, function(err, docs) {
+    collection.update(query, update, { upsert: false, safe: true }, function(err, docs) {
       if(err) {
-        console.log('Failed updating dataminerstats');
+        console.log('Failed updating pulling old data from dataminerstats');
         return;
       }
       else {
-        console.log('Updated dataminerstats');
+        console.log('Pulled old data from dataminerstats');
       }
       
-      db.close();
-      done.resolve();
+      update = { $push: { stats: doc } };
+      
+      collection.update(query, update, { upsert: true, safe: true }, function(err, docs) {
+        if(err) {
+          console.log('Failed updating dataminerstats');
+          return;
+        }
+        else {
+          console.log('Updated dataminerstats');
+        }
+
+        db.close();
+        done.resolve();
+      });
     });
   });
 }

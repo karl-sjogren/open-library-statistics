@@ -1,4 +1,4 @@
-/* global require, process, setInterval */
+/* global module, require, process, setInterval */
 /*jshint indent:2 */
 
 module.exports = function(app, io) {
@@ -32,15 +32,31 @@ module.exports = function(app, io) {
       'lat': coords[0],
       'lon': coords[1]
     };
-    io.sockets.emit('search', obj);
-    
+    io.sockets.emit('search', obj);    
+  }, 300);
+
+
+  setInterval(function() {
     var perf = {
       availableMemory: 1751,
       clientKey: '0547fa3bd80c485c439bf42d',
       cpuUsage: 100*Math.random(),
       memoryUsage: 100*Math.random(),
       totalMemory: 8191
-    }
+    };
     io.sockets.emit('performance', perf);
-  }, 300);
-}
+  }, 500);
+
+
+  setInterval(function() {
+    var miner = {
+      clientKey: '0547fa3bd80c485c439bf42d',
+      minerName: "DataMinerWorkerThingy",
+      catalogName: "OLS Thingy",
+      catalogId: "55750197-4a3f-4120-a0eb-686ddc485b20",
+      scannedWorksPerMinute: 42,
+      lastScannedId: 1234
+    };
+    io.sockets.emit('minerstats', miner);
+  }, 500);
+};
