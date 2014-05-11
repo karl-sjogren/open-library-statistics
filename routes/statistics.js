@@ -64,7 +64,7 @@ module.exports = function(app, io) {
             };
 
             io.sockets.emit('performance', perf);
-          } else if(item.type.toLowerCase() === 'performance') {
+          } else if(item.type.toLowerCase() === 'dataminerstats') {
             var miner = {
               clientKey: item.clientKey,
               minerName: item.minerName,
