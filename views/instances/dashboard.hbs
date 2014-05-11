@@ -25,26 +25,21 @@
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-xs-12 col-sm-6">
-              <h2 class="sub-header">Live searches</h2>
-              <div class="cpu-graph large-graph" data-client-key="{{clientKey}}"></div>
-            </div>
-            <div class="col-xs-12 col-sm-6">
-              <h2 class="sub-header">Live logins</h2>
-              <div class="memory-graph large-graph" data-client-key="{{clientKey}}"></div>
-            </div>
-          </div>
-
-
           <div class="row ">
             <h2 class="sub-header">Miner activity <small>Works/minute</small></h2>
             
           {{#each miners}}
             <div class="col-xs-6 col-sm-3 knobs">
-              <input class="knob" data-angleOffset=-125 data-angleArc=250 data-fgColor="#66EE66" value="0" data-readOnly="true" data-max="500" data-client-key="{{../clientKey}}" data-miner-name="{{_id.minerName}}" data-catalog-id="{{_id.catalogId}}">
+              <input class="knob" value="0"
+                     data-angleOffset="-125"
+                     data-angleArc="250"
+                     data-fgColor="#66EE66"
+                     data-max="500"
+                     data-readOnly="true"
+                     data-client-key="{{../clientKey}}"
+                     data-miner-name="{{_id.minerName}}"
+                     data-catalog-id="{{_id.catalogId}}">
               <h3>{{_id.catalogName}} <small>{{_id.minerName}}</small></h3>
-              
             </div>
           {{/each}}
           </div>
