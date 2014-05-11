@@ -109,3 +109,29 @@ module.exports.list = function() {
   
   return deferred.promise;
 };
+
+module.exports.getMinersByKey = function(options) {
+  var deferred = Q.defer();
+  Client(function(err, db) {
+    if(err)
+      throw err;
+
+    options = options || { };
+
+    var collection = db.collection('dataminerstats');
+    collection.aggregate([ 
+      { $match : { clientKey : options.clientKey } },
+      { "$group": { "_id": { catalogId: "$catalogId", catalogName: "$catalogName", minerName: "$minerName" } } } 
+    ], function(err, docs) {
+      if(err) {
+        console.log('Failed retrieving miners');
+        deferred.reject(err);
+        return;
+      }
+      db.close();
+      deferred.resolve(docs);
+    });
+  });
+  
+  return deferred.promise;
+};

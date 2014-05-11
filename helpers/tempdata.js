@@ -54,9 +54,9 @@ module.exports = function(app, io) {
       minerName: "DataMinerWorkerThingy",
       catalogName: "OLS Thingy",
       catalogId: "55750197-4a3f-4120-a0eb-686ddc485b20",
-      scannedWorksPerMinute: 42,
-      lastScannedId: 1234
+      scannedWorksPerMinute: 30 + 300*Math.random(),
+      lastScannedId: 30000*Math.random()
     };
-    io.sockets.emit('minerstats', miner);
+    io.sockets.emit('dataminerstats', miner);
   }, 500);
 };

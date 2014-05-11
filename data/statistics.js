@@ -88,6 +88,7 @@ function savePerformance(item, done) {
   });
 }
 
+// To get the last 20 stats: db.dataminerstats.find({}, { stats: { $slice: -20 } } )
 function saveMinerStats(item, done) {
   Client(function(err, db) {
     if(err)
@@ -97,11 +98,10 @@ function saveMinerStats(item, done) {
 
     var date = dateHelpers.removeSeconds(dateHelpers.nextFiveMinute(new Date(item.timeStamp)));
 
-    var query = { date: strftime('%Y-%m-%d', item.date), clientKey: item.clientKey, catalogId: item.catalogId, catalogName: item.catalogName };
+    var query = { date: strftime('%Y-%m-%d', item.date), clientKey: item.clientKey, catalogId: item.catalogId, catalogName: item.catalogName, minerName: item.minerName };
 
     var doc = {
       date: date,
-      minerName: item.minerName,
       lastScan: item.lastScan,
       scannedWorksPerMinute: item.scannedWorksPerMinute,
       lastScannedId: item.lastScannedId

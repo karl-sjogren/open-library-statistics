@@ -36,16 +36,20 @@ module.exports = function(app, io) {
   });
 
   app.get('/instances/dashboard/:key', function (req, res) {
-    clientInstances.getByKey({ clientKey: req.params.key }).then(function(doc) {
-      res.render('instances/dashboard', { 
-        title: doc.name + ' dashboard', 
-        subTitle: doc.clientKey, 
-        name: doc.name, 
-        latitude: doc.latitude, 
-        longitude: doc.longitude, 
-        clientKey: doc.clientKey, 
-        googleMapsKey: process.env.GOOGLE_MAPS_KEY 
-      });  
+    clientInstances.getByKey({ clientKey: req.params.key }).then(function(instance) {
+      clientInstances.getMinersByKey({ clientKey: req.params.key }).then(function(miners) {
+        console.log(miners);
+        res.render('instances/dashboard', { 
+          title: instance.name + ' dashboard', 
+          subTitle: instance.clientKey, 
+          name: instance.name, 
+          latitude: instance.latitude, 
+          longitude: instance.longitude, 
+          clientKey: instance.clientKey,
+          miners: miners,
+          googleMapsKey: process.env.GOOGLE_MAPS_KEY 
+        });
+      });
     });
   });
 };

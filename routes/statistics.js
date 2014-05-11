@@ -22,19 +22,19 @@ module.exports = function(app, io) {
     io.sockets.emit('search', obj);
     res.end();
   });
-  
+
   app.put('/statistics/collect', function (req, res) {
     var body = req.body;
     if(!body) {
       return;
     }
-    
+
     if(!Array.isArray(body)) {
       console.log('Legacy, non-array, message recieved.');
       console.log(body);
       body = [body];
     }
-    
+
     promiseFor(body, function(idx, item) {
       var done = Q.defer();
 
@@ -64,11 +64,21 @@ module.exports = function(app, io) {
             };
 
             io.sockets.emit('performance', perf);
+          } else if(item.type.toLowerCase() === 'performance') {
+            var miner = {
+              clientKey: item.clientKey,
+              minerName: item.minerName,
+              catalogName: item.catalogName,
+              catalogId: item.catalogId,
+              scannedWorksPerMinute: item.scannedWorksPerMinute,
+              lastScannedId: item.lastScannedId              
+            };
+            io.sockets.emit('dataminerstats', miner);
           }
           done.resolve();
         });
       });
-      
+
       return done.promise;
     }).then(function(results) {
       console.log('Successfull items: ' + results.success.length); 
