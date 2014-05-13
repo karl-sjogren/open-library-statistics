@@ -46,36 +46,46 @@ module.exports = function(app, io) {
         }
 
         statistics.save(item).then(function() {
-          if(!!item.type && item.type.toLowerCase().indexOf('search') !== -1) {
-            var search = {
-              'keywords': item.freeText,
-              'lat': client.latitude,
-              'lon': client.longitude
-            };
+          if(!!item.type) {
+            var type = item.type.toLowerCase();
+            if(type.indexOf('search') !== -1) {
+              var search = {
+                'keywords': item.freeText,
+                'lat': client.latitude,
+                'lon': client.longitude
+              };
 
-            io.sockets.emit('search', search);
-          } else if(item.type.toLowerCase() === 'performance') {
-            var perf = {
-              clientKey: item.clientKey,
-              cpuUsage: item.cpuUsage,
-              availableMemory: item.availableMemory,
-              totalMemory: item.totalMemory,
-              memoryUsage: item.memoryUsage
-            };
+              io.sockets.emit('search', search);
+            } else if(type === 'performance') {
+              var perf = {
+                clientKey: item.clientKey,
+                cpuUsage: item.cpuUsage,
+                availableMemory: item.availableMemory,
+                totalMemory: item.totalMemory,
+                memoryUsage: item.memoryUsage
+              };
 
-            io.sockets.emit('performance', perf);
-          } else if(item.type.toLowerCase() === 'dataminerstats') {
-            var miner = {
-              clientKey: item.clientKey,
-              minerName: item.minerName,
-              catalogName: item.catalogName,
-              catalogId: item.catalogId,
-              scannedWorksPerMinute: item.scannedWorksPerMinute,
-              lastScannedId: item.lastScannedId              
-            };
-            io.sockets.emit('dataminerstats', miner);
+              io.sockets.emit(type, perf);
+            } else if(type === 'dataminerstats') {
+              var miner = {
+                clientKey: item.clientKey,
+                minerName: item.minerName,
+                catalogName: item.catalogName,
+                catalogId: item.catalogId,
+                scannedWorksPerMinute: item.scannedWorksPerMinute,
+                lastScannedId: item.lastScannedId              
+              };
+              io.sockets.emit(type, miner);
+            } else if(type === 'reindexstats') {
+              var reindex = {
+                totalProcessed : item.totalProcessed,
+                pageSize: item.pageSize,
+                lastId: item.lastId
+              };
+              io.sockets.emit(type, reindex);
+            }
+            done.resolve();
           }
-          done.resolve();
         });
       });
 

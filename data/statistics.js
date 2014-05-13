@@ -24,6 +24,10 @@ function save(item) {
     case 'dataminerstats':
       saveMinerStats(item, done);
       break;
+    case 'reindexstats':
+      saveReindexStats(item, done);
+      break;
+      
     default:
       console.log('An invalid type was supplied: ' + item.type.toLowerCase() + '\n' + JSON.stringify(item));
   }
@@ -62,28 +66,38 @@ function savePerformance(item, done) {
 
     item = item || { };
 
+    var date = dateHelpers.removeSeconds(dateHelpers.nextFiveMinute(new Date(item.timeStamp)));
+
+    var query = { date: strftime('%Y-%m-%d', item.date), clientKey: item.clientKey };
+
     var doc = {
-      date: new Date(item.timeStamp),
+      date: date,
       cpuUsage: item.cpuUsage,
       availableMemory: item.availableMemory,
       totalMemory: item.totalMemory,
       memoryUsage: item.memoryUsage
     };
 
-    var update = {$push: { 'updates': doc }};
+    var update = { $pull: { stats: { date: date } } };
 
     var collection = db.collection('performance');
-    collection.update({ date: strftime('%Y-%m-%d', item.date), clientKey: item.clientKey }, update, { upsert: true, safe: true }, function(err, docs) {
+    collection.update(query, update, { upsert: false, safe: true }, function(err, docs) {
       if(err) {
-        console.log('Failed updating performance');
+        console.log('Failed pulling old data from performance');
         return;
       }
-      else {
-        console.log('Updated performance');
-      }
+      
+      update = { $push: { stats: doc } };
+      
+      collection.update(query, update, { upsert: true, safe: true }, function(err, docs) {
+        if(err) {
+          console.log('Failed updating performance');
+          return;
+        }
 
-      db.close();
-      done.resolve();
+        db.close();
+        done.resolve();
+      });
     });
   });
 }
@@ -112,11 +126,8 @@ function saveMinerStats(item, done) {
     var collection = db.collection('dataminerstats');
     collection.update(query, update, { upsert: false, safe: true }, function(err, docs) {
       if(err) {
-        console.log('Failed updating pulling old data from dataminerstats');
+        console.log('Failed pulling old data from dataminerstats');
         return;
-      }
-      else {
-        console.log('Pulled old data from dataminerstats');
       }
       
       update = { $push: { stats: doc } };
@@ -126,8 +137,47 @@ function saveMinerStats(item, done) {
           console.log('Failed updating dataminerstats');
           return;
         }
-        else {
-          console.log('Updated dataminerstats');
+
+        db.close();
+        done.resolve();
+      });
+    });
+  });
+}
+
+function saveReindexStats(item, done) {
+  Client(function(err, db) {
+    if(err)
+      throw err;
+
+    item = item || { };
+
+    var date = dateHelpers.removeSeconds(dateHelpers.nextFiveMinute(new Date(item.timeStamp)));
+
+    var query = { date: strftime('%Y-%m-%d', item.date), clientKey: item.clientKey };
+
+    var doc = {
+      date: date,
+      totalProcessed : item.totalProcessed,
+      pageSize: item.pageSize,
+      lastId: item.lastId
+    };
+
+    var update = { $pull: { stats: { date: date } } };
+
+    var collection = db.collection('reindexstats');
+    collection.update(query, update, { upsert: false, safe: true }, function(err, docs) {
+      if(err) {
+        console.log('Failed pulling old data from reindexstats');
+        return;
+      }
+      
+      update = { $push: { stats: doc } };
+      
+      collection.update(query, update, { upsert: true, safe: true }, function(err, docs) {
+        if(err) {
+          console.log('Failed updating reindexstats');
+          return;
         }
 
         db.close();
