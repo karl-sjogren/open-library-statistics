@@ -12,7 +12,7 @@ module.exports.getByKey = function(options) {
 
     options = options || { };
 
-    var collection = db.collection('clientInstances');
+    var collection = db.collection('client-instances');
     collection.findOne({clientKey: options.clientKey}, function(err, doc) {
       if(err) {
         console.log('Failed retrieving instance');
@@ -42,7 +42,7 @@ module.exports.create = function(options) {
       longitude: options.longitude || 0
     };
 
-    var collection = db.collection('clientInstances');
+    var collection = db.collection('client-instances');
     collection.insert([opts], function(err, doc) {
       if(err) {
         console.log('Failed retrieving instances');
@@ -72,7 +72,7 @@ module.exports.save = function(options) {
       longitude: options.longitude || 0
     };
 
-    var collection = db.collection('clientInstances');
+    var collection = db.collection('client-instances');
     collection.update({ clientKey: options.clientKey }, opts, function(err, doc) {
       if(err) {
         console.log('Failed updating instance');
@@ -93,7 +93,7 @@ module.exports.list = function() {
     if(err)
       throw err;
 
-    var collection = db.collection('clientInstances');
+    var collection = db.collection('client-instances');
     collection.find(function(err, docs) {
       if(err) {
         console.log('Failed retrieveing documents');
