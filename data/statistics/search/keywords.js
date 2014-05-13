@@ -21,7 +21,7 @@ module.exports = function(db, options) {
       deferred.reject(err);
       return;
     }
-    console.log('Updated docs for keyword ' + keyword);
+
     deferred.resolve(docs);
   });
 

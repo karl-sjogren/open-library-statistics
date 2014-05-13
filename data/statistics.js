@@ -15,7 +15,7 @@ function save(item) {
   switch(item.type.toLowerCase()) {
     case 'worksetsearch':
     case 'worksearch':
-    case 'search':
+    case 'search': // Obsolete type, can probably be removed in a few months
       saveSearch(item, done);
       break;
     case 'performance':
@@ -26,6 +26,13 @@ function save(item) {
       break;
     case 'reindexstats':
       saveReindexStats(item, done);
+      break;
+    case 'electronicmedialoan':
+      saveElectronicMediaLoan(item, done);
+      break;
+    case 'reservationadded':
+    case 'reservationremoved':
+      saveReservation(item, done);
       break;
       
     default:
@@ -43,16 +50,15 @@ function saveSearch(item, done) {
 
     var opts = {
       date: new Date(item.timeStamp),
-      type: item.type || '',
+      type: item.type,
       keyword: item.keyword || ''
     };
 
-    var updateHours = require('./statistics/search/hours');
-    var updateDays = require('./statistics/search/days');
+    var updateHours = require('./statistics/actions/hours');
+    var updateDays = require('./statistics/actions/days');
     var updateKeywords = require('./statistics/search/keywords');
 
     Q.all([updateHours(db, opts), updateDays(db, opts), updateKeywords(db, opts)]).then(function() {
-      console.log('All updates done, closing database');
       db.close();
       done.resolve();
     });  
@@ -187,7 +193,58 @@ function saveReindexStats(item, done) {
   });
 }
 
+function saveElectronicMediaLoan(item, done) {
+  Client(function(err, db) {
+    if(err)
+      throw err;
+
+    item = item || { };
+
+    var opts = {
+      date: new Date(item.timeStamp),
+      type: item.type
+    };
+
+    var updateHours = require('./statistics/actions/hours');
+    var updateDays = require('./statistics/actions/days');
+    
+    // TODO: Save title and ISBN somewhere as well
+
+    Q.all([updateHours(db, opts), updateDays(db, opts), updateKeywords(db, opts)]).then(function() {
+      db.close();
+      done.resolve();
+    });  
+  });
+}
+
+function saveReservation(item, done) {
+  Client(function(err, db) {
+    if(err)
+      throw err;
+
+    item = item || { };
+
+    var opts = {
+      date: new Date(item.timeStamp),
+      type: item.type
+    };
+
+    var updateHours = require('./statistics/actions/hours');
+    var updateDays = require('./statistics/actions/days');
+    
+    // TODO: Save title and ISBN somewhere as well
+
+    Q.all([updateHours(db, opts), updateDays(db, opts), updateKeywords(db, opts)]).then(function() {
+      db.close();
+      done.resolve();
+    });  
+  });
+}
+
 module.exports.save = save;
 module.exports.saveSearch = saveSearch;
 module.exports.savePerformance = savePerformance;
 module.exports.saveMinerStats = saveMinerStats;
+module.exports.saveReindexStats = saveReindexStats;
+module.exports.saveElectronicMediaLoan = saveElectronicMediaLoan;
+module.exports.saveReservation = saveReservation;

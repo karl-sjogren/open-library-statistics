@@ -9,19 +9,19 @@ module.exports = function(db, options) {
 
   var type = options.type;
   var date = options.date;
-
+  
   var update = {$inc: {}};
-  update.$inc['count.hour_' + strftime('%H', date) + '.' + type] = 1;
-  update.$inc['count.hour_' + strftime('%H', date) + '.total'] = 1;
+  update.$inc['count.day_' + strftime('%d', date) + '.' + type] = 1;
+  update.$inc['count.day_' + strftime('%d', date) + '.total'] = 1;
 
   var collection = db.collection('actions');
-  collection.update({date: strftime('%Y-%m-%d', date)}, update, { upsert: true, safe: true }, function(err, docs) {
+  collection.update({month: strftime('%Y-%m', date)}, update, { upsert: true, safe: true }, function(err, docs) {
     if(err) {
-      console.log('Failed updating docs for days');
+      console.log('Failed updating docs for hours');
       deferred.reject(err);
       return;
     }
-    console.log('Updated docs for days');
+
     deferred.resolve(docs);
   });
 
