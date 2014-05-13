@@ -91,7 +91,7 @@ module.exports = function(app, io) {
 
       return done.promise;
     }).then(function(results) {
-      if(results.failures.length >= 0) {
+      if(results.failures.length > 0) {
         console.log('Failed items: ' + results.failures.length + ' (out of a total of ' + (results.success.length + results.failures.length) + ' items)'); 
       }
       res.end();
