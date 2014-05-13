@@ -1,4 +1,4 @@
-/* global require, module, console */
+/* global require, module, console, JSON */
 /* jshint indent:2 */
 var Client = require('./index'),
     dateHelpers = require('./../helpers/date'),
@@ -25,7 +25,7 @@ function save(item) {
       saveMinerStats(item, done);
       break;
     default:
-      console.log('An invalid type was supplied: ' + item.type.toLowerCase());
+      console.log('An invalid type was supplied: ' + item.type.toLowerCase() + '\n' + JSON.stringify(item));
   }
   return done.promise;
 }
