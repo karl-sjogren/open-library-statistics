@@ -210,7 +210,7 @@ function saveElectronicMediaLoan(item, done) {
     
     // TODO: Save title and ISBN somewhere as well
 
-    Q.all([updateHours(db, opts), updateDays(db, opts), updateKeywords(db, opts)]).then(function() {
+    Q.all([updateHours(db, opts), updateDays(db, opts)]).then(function() {
       db.close();
       done.resolve();
     });  
@@ -234,7 +234,7 @@ function saveReservation(item, done) {
     
     // TODO: Save title and ISBN somewhere as well
 
-    Q.all([updateHours(db, opts), updateDays(db, opts), updateKeywords(db, opts)]).then(function() {
+    Q.all([updateHours(db, opts), updateDays(db, opts)]).then(function() {
       db.close();
       done.resolve();
     });  
