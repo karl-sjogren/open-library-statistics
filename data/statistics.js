@@ -35,6 +35,9 @@ Client(function(err, db) {
       case 'electronicmedialoan':
         saveElectronicMediaLoan(item, done);
         break;
+      case 'login':
+        saveLogin(item, done);
+        break;
       case 'reservationadded':
       case 'reservationremoved':
         saveReservation(item, done);
@@ -194,6 +197,22 @@ Client(function(err, db) {
     });  
   }
 
+  function saveLogin(item, done) {
+    item = item || { };
+
+    var opts = {
+      date: new Date(item.timeStamp),
+      type: item.type
+    };
+
+    var updateHours = require('./statistics/actions/hours');
+    var updateDays = require('./statistics/actions/days');
+
+    Q.all([updateHours(db, opts), updateDays(db, opts)]).then(function() {
+      done.resolve();
+    });  
+  }
+
   function saveReservation(item, done) {
     item = item || { };
 
@@ -218,6 +237,6 @@ Client(function(err, db) {
   module.exports.saveMinerStats = saveMinerStats;
   module.exports.saveReindexStats = saveReindexStats;
   module.exports.saveElectronicMediaLoan = saveElectronicMediaLoan;
+  module.exports.saveLogin = saveLogin;
   module.exports.saveReservation = saveReservation;
-
 });
