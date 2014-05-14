@@ -85,7 +85,7 @@ Client(function(err, db) {
     var collection = db.collection('performance');
     collection.update(query, update, { upsert: false, safe: true }, function(err, docs) {
       if(err) {
-        console.log('Failed pulling old data from performance, ' + err);
+        console.log('Failed pulling old data from performance, ' + JSON.stringify(err));
         return;
       }
 
@@ -93,7 +93,7 @@ Client(function(err, db) {
 
       collection.update(query, update, { upsert: true, safe: true }, function(err, docs) {
         if(err) {
-          console.log('Failed updating performance, ' + err);
+          console.log('Failed updating performance, ' + JSON.stringify(err));
           return;
         }
 
@@ -122,7 +122,7 @@ Client(function(err, db) {
     var collection = db.collection('dataminerstats');
     collection.update(query, update, { upsert: false, safe: true }, function(err, docs) {
       if(err) {
-        console.log('Failed pulling old data from dataminerstats, ' + err);
+        console.log('Failed pulling old data from dataminerstats, ' + JSON.stringify(err));
         return;
       }
 
@@ -130,7 +130,7 @@ Client(function(err, db) {
 
       collection.update(query, update, { upsert: true, safe: true }, function(err, docs) {
         if(err) {
-          console.log('Failed updating dataminerstats, ' + err);
+          console.log('Failed updating dataminerstats, ' + JSON.stringify(err));
           return;
         }
 
@@ -159,7 +159,7 @@ Client(function(err, db) {
     var collection = db.collection('reindexstats');
     collection.update(query, update, { upsert: false, safe: true }, function(err, docs) {
       if(err) {
-        console.log('Failed pulling old data from reindexstats, ' + err);
+        console.log('Failed pulling old data from reindexstats, ' + JSON.stringify(err));
         return;
       }
 
@@ -167,7 +167,7 @@ Client(function(err, db) {
 
       collection.update(query, update, { upsert: true, safe: true }, function(err, docs) {
         if(err) {
-          console.log('Failed updating reindexstats, ' + err);
+          console.log('Failed updating reindexstats, ' + JSON.stringify(err));
           return;
         }
 
