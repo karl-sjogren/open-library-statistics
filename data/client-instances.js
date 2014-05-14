@@ -4,11 +4,13 @@ var Client = require('./index.js'),
     ObjectID = require('mongodb').ObjectID,
     Q = require('q');
 
-module.exports.getByKey = function(options) {
-  var deferred = Q.defer();
-  Client(function(err, db) {
-    if(err)
-      throw err;
+Client(function(err, db) {
+  if(err) {
+    throw err;
+  }
+
+  module.exports.getByKey = function(options) {
+    var deferred = Q.defer();
 
     options = options || { };
 
@@ -19,22 +21,18 @@ module.exports.getByKey = function(options) {
         deferred.reject(err);
         return;
       }
-      db.close();
       deferred.resolve(doc);
     });
-  });
-  
-  return deferred.promise;
-};
 
-module.exports.create = function(options) {
-  var deferred = Q.defer();
-  Client(function(err, db) {
-    if(err)
-      throw err;
+
+    return deferred.promise;
+  };
+
+  module.exports.create = function(options) {
+    var deferred = Q.defer();
 
     options = options || { };
-    
+
     var opts = {
       clientKey: new ObjectID(Math.random() * 1000000000).toHexString(),
       name: options.name || '',
@@ -49,22 +47,17 @@ module.exports.create = function(options) {
         deferred.reject(err);
         return;
       }
-      db.close();
       deferred.resolve(doc);
     });
-  });
-  
-  return deferred.promise;
-};
 
-module.exports.save = function(options) {
-  var deferred = Q.defer();
-  Client(function(err, db) {
-    if(err)
-      throw err;
+    return deferred.promise;
+  };
+
+  module.exports.save = function(options) {
+    var deferred = Q.defer();
 
     options = options || { };
-    
+
     var opts = {
       clientKey: options.clientKey,
       name: options.name,
@@ -79,19 +72,14 @@ module.exports.save = function(options) {
         deferred.reject(err);
         return;
       }
-      db.close();
       deferred.resolve(doc);
     });
-  });
-  
-  return deferred.promise;
-};
 
-module.exports.list = function() {
-  var deferred = Q.defer();
-  Client(function(err, db) {
-    if(err)
-      throw err;
+    return deferred.promise;
+  };
+
+  module.exports.list = function() {
+    var deferred = Q.defer();
 
     var collection = db.collection('client-instances');
     collection.find(function(err, docs) {
@@ -101,20 +89,16 @@ module.exports.list = function() {
         return;
       }
       docs.toArray(function(err, arr) {
+
         deferred.resolve(arr);
-        db.close();
       });
     });
-  });
-  
-  return deferred.promise;
-};
 
-module.exports.getMinersByKey = function(options) {
-  var deferred = Q.defer();
-  Client(function(err, db) {
-    if(err)
-      throw err;
+    return deferred.promise;
+  };
+
+  module.exports.getMinersByKey = function(options) {
+    var deferred = Q.defer();
 
     options = options || { };
 
@@ -128,10 +112,9 @@ module.exports.getMinersByKey = function(options) {
         deferred.reject(err);
         return;
       }
-      db.close();
       deferred.resolve(docs);
     });
-  });
-  
-  return deferred.promise;
-};
+
+    return deferred.promise;
+  };
+});
