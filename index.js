@@ -24,7 +24,7 @@ Q.all([compile.less(), compile.js(), compile.fonts()]).then(function() {
   console.log('All precompilation done');
 
   // Setup middleware functions, the order is important here!
-  app.use(bodyParserMiddleware());
+  app.use(bodyParserMiddleware({limit: '10mb'}));
   app.use('/', basicAuth('Open Library Statistics Alpha'));
 
   app.set('views', __dirname + '/views');
