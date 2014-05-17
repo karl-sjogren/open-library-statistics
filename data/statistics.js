@@ -140,7 +140,6 @@ Client(function(err, db) {
         done.resolve();
       });
     });
-
   }
 
   function saveReindexStats(item, done) {

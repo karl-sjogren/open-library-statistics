@@ -1,0 +1,8 @@
+db.performance.aggregate([
+  { $match : { clientKey : "2dbd9506cd652a0200a72806" } },
+  { $unwind: "$stats" },
+  { $sort: { "stats.date": -1 } },
+  { $limit  : 30 },
+  { $group: { _id: null, stats: { $push: "$stats"} } },
+  { $project: { _id: 0, stats: "$stats"} }
+])
