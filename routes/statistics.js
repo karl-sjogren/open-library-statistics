@@ -39,7 +39,8 @@ module.exports = function(app, io) {
                 'lon': client.longitude
               };
 
-              io.sockets.emit('search', search);
+              if(!!search && search.keywords.length > 0)
+                io.sockets.emit('search', search);  // No need to emit empty keywords
               
             } else if(type === 'performance') {
               var perf = {
