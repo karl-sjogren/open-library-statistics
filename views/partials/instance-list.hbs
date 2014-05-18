@@ -3,16 +3,16 @@
               <thead>
                 <tr>
                   <th>Name</th>
-                  <th>Key</th>
-                  <th colspan="2">CPU Usage</th>
-                  <th colspan="2">Memory Usage</th>
+                  <th class="hidden-xs hidden-sm">Key</th>
+                  <th colspan="2">CPU<span class="hidden-xs hidden-sm"> Usage</span></th>
+                  <th colspan="2">Memory<span class="hidden-xs hidden-sm"> Usage</span></th>
                 </tr>
               </thead>
               <tbody>
               {{#each instances}}
                 <tr data-client-key="{{clientKey}}">
-                  <td>{{name}}</td>
-                  <td><a href="/instances/edit/{{clientKey}}">{{clientKey}}</a></td>
+                  <td><a href="/instances/dashboard/{{clientKey}}">{{name}}</a></td>
+                  <td class="hidden-xs hidden-sm"><a href="/instances/edit/{{clientKey}}">{{clientKey}}</a></td>
                   <td class="cpu-usage">-% </td>
                   <td class="graph"><div class="cpu-graph" data-client-key="{{clientKey}}"></div></td>
                   <td class="memory-usage">-%</td>

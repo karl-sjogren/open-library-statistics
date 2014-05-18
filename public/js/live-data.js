@@ -11,7 +11,7 @@ $(document).ready(function() {
     var row = $('tr[data-client-key="' + clientKey + '"]');
     if(!!row) {
       row.find('.cpu-usage').html(Math.floor(data.cpuUsage) + '%');
-      row.find('.memory-usage').html(Math.floor(data.memoryUsage) + '% (' + (data.totalMemory - data.availableMemory) + '/' + data.totalMemory + ' MB)');
+      row.find('.memory-usage').html(Math.floor(data.memoryUsage) + '%<span class="hidden-xs hidden-sm"> (' + (data.totalMemory - data.availableMemory) + '/' + data.totalMemory + ' MB)</span>');
     }
     
     var cpuGraph = $('.cpu-graph[data-client-key="' + clientKey + '"]');

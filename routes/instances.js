@@ -15,9 +15,8 @@ module.exports = function(app, io) {
   });
 
   app.post('/instances/add', function (req, res) {
-    console.log(req.body);
-    clientInstances.create({ name: req.body.name, latitude: req.body.latitude, longitude: req.body.longitude }).then(function() {
-      res.render('instances/add', { title: 'Add instance', success: true, name: req.body.name });  
+    clientInstances.create({ name: req.body.name, latitude: req.body.latitude, longitude: req.body.longitude }).then(function(docs) {
+      res.render('instances/add', { title: 'Add instance', success: true, name: docs[0].name, clientKey: docs[0].clientKey });  
     });
   });
 

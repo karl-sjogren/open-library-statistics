@@ -40,6 +40,7 @@ module.exports = function(app, io) {
               };
 
               io.sockets.emit('search', search);
+              
             } else if(type === 'performance') {
               var perf = {
                 clientKey: item.clientKey,
@@ -50,6 +51,7 @@ module.exports = function(app, io) {
               };
 
               io.sockets.emit(type, perf);
+              
             } else if(type === 'dataminerstats') {
               var miner = {
                 clientKey: item.clientKey,
@@ -59,14 +61,18 @@ module.exports = function(app, io) {
                 scannedWorksPerMinute: item.scannedWorksPerMinute,
                 lastScannedId: item.lastScannedId              
               };
+              
               io.sockets.emit(type, miner);
+              
             } else if(type === 'reindexstats') {
               var reindex = {
                 totalProcessed : item.totalProcessed,
                 pageSize: item.pageSize,
                 lastId: item.lastId
               };
+              
               io.sockets.emit(type, reindex);
+              
             }
             done.resolve();
           }
