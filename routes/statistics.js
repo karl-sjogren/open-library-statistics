@@ -7,22 +7,6 @@ var promiseFor = require('../helpers/promise-for');
 var Q = require('q');
 
 module.exports = function(app, io) {
-  app.post('/recieve', function (req, res) { // Obsolete, just kept since we have an implementation in production using it still
-    var body = req.body;
-    if(!body) {
-      return;
-    }
-
-    var obj = {
-      'keywords': body.keywords,
-      'lat': body.lat,
-      'lon': body.lon
-    };
-
-    io.sockets.emit('search', obj);
-    res.end();
-  });
-
   app.put('/statistics/collect', function (req, res) {
     var body = req.body;
     if(!body) {
