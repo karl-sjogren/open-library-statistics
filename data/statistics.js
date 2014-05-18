@@ -54,16 +54,26 @@ Client(function(err, db) {
     item = item || { };
 
     var opts = {
+      clientKey: item.clientKey,
       date: new Date(item.timeStamp),
       type: item.type,
       keyword: item.keyword || ''
     };
 
+    var globalOpts = {
+      clientKey: '000000000000000000000',
+      date: new Date(item.timeStamp),
+      type: item.type,
+      keyword: item.keyword || ''
+    };
+    
     var updateHours = require('./statistics/actions/hours');
     var updateDays = require('./statistics/actions/days');
     var updateKeywords = require('./statistics/search/keywords');
 
-    Q.all([updateHours(db, opts), updateDays(db, opts), updateKeywords(db, opts)]).then(function() {
+    Q.all([
+        updateHours(db, opts),       updateDays(db, opts),       updateKeywords(db, opts),
+        updateHours(db, globalOpts), updateDays(db, globalOpts), updateKeywords(db, globalOpts)]).then(function() {
       done.resolve();
     });  
   }
@@ -182,6 +192,13 @@ Client(function(err, db) {
     item = item || { };
 
     var opts = {
+      clientKey: item.clientKey,
+      date: new Date(item.timeStamp),
+      type: item.type
+    };
+
+    var globalOpts = {
+      clientKey: '000000000000000000000',
       date: new Date(item.timeStamp),
       type: item.type
     };
@@ -191,7 +208,9 @@ Client(function(err, db) {
 
     // TODO: Save title and ISBN somewhere as well
 
-    Q.all([updateHours(db, opts), updateDays(db, opts)]).then(function() {
+    Q.all([
+        updateHours(db, opts),       updateDays(db, opts),
+        updateHours(db, globalOpts), updateDays(db, globalOpts) ]).then(function() {
       done.resolve();
     });  
   }
@@ -200,6 +219,13 @@ Client(function(err, db) {
     item = item || { };
 
     var opts = {
+      clientKey: item.clientKey,
+      date: new Date(item.timeStamp),
+      type: item.type
+    };
+
+    var globalOpts = {
+      clientKey: '000000000000000000000',
       date: new Date(item.timeStamp),
       type: item.type
     };
@@ -207,7 +233,9 @@ Client(function(err, db) {
     var updateHours = require('./statistics/actions/hours');
     var updateDays = require('./statistics/actions/days');
 
-    Q.all([updateHours(db, opts), updateDays(db, opts)]).then(function() {
+    Q.all([
+        updateHours(db, opts),       updateDays(db, opts),
+        updateHours(db, globalOpts), updateDays(db, globalOpts) ]).then(function() {
       done.resolve();
     });  
   }
@@ -216,6 +244,13 @@ Client(function(err, db) {
     item = item || { };
 
     var opts = {
+      clientKey: item.clientKey,
+      date: new Date(item.timeStamp),
+      type: item.type
+    };
+
+    var globalOpts = {
+      clientKey: '000000000000000000000',
       date: new Date(item.timeStamp),
       type: item.type
     };
@@ -225,7 +260,9 @@ Client(function(err, db) {
 
     // TODO: Save title and ISBN somewhere as well
 
-    Q.all([updateHours(db, opts), updateDays(db, opts)]).then(function() {
+    Q.all([
+        updateHours(db, opts),       updateDays(db, opts),
+        updateHours(db, globalOpts), updateDays(db, globalOpts) ]).then(function() {
       done.resolve();
     });  
   }

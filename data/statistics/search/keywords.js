@@ -15,7 +15,7 @@ module.exports = function(db, options) {
   update.$inc['count.total'] = 1;
 
   var collection = db.collection('keywords');
-  collection.update({keyword: keyword}, update, { upsert: true, safe: true }, function(err, docs) {
+  collection.update({ keyword: keyword, clientKey: options.clientKey }, update, { upsert: true, safe: true }, function(err, docs) {
     if(err) {
       console.log('Failed updating docs for keyword ' + keyword);
       deferred.reject(err);

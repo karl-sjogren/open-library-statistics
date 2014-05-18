@@ -15,7 +15,7 @@ module.exports = function(db, options) {
   update.$inc['count.hour_' + strftime('%H', date) + '.total'] = 1;
 
   var collection = db.collection('actions');
-  collection.update({date: strftime('%Y-%m-%d', date)}, update, { upsert: true, safe: true }, function(err, docs) {
+  collection.update({ date: strftime('%Y-%m-%d', date), clientKey: options.clientKey }, update, { upsert: true, safe: true }, function(err, docs) {
     if(err) {
       console.log('Failed updating docs for days');
       deferred.reject(err);
