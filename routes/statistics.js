@@ -62,9 +62,11 @@ module.exports = function(app, io) {
   };
   
   io.on('ola-connected', function(data) {
+    console.log('OLA with client-key ' + data + ' connected via websockets.');
   });
   
   io.on('ola-disconnected', function(data) {
+    console.log('OLA with client-key ' + data + ' disconnected via websockets.');
   });
   
   io.on('statistics', function(data) {
