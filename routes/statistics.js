@@ -55,7 +55,7 @@ module.exports = function(app, io) {
 
         }
 
-        if(!!callback))
+        if(!!callback)
           callback();
       }
     });
