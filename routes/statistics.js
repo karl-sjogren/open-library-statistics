@@ -68,7 +68,7 @@ module.exports = function(app, io) {
   });
   
   io.on('statistics', function(data) {
-    if (typeof myVar == 'string' || myVar instanceof String) {
+    if (typeof data == 'string' || data instanceof String) {
       console.log('A string was recieved as statistics via socket.io, trying to parse it.');
       console.log(data);
       data = JSON.parse(data);
