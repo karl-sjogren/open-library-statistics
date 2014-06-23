@@ -73,10 +73,8 @@ module.exports = function(app, io) {
     socket.on('statistics', function(data) {
       if (typeof data == 'string' || data instanceof String) {
         console.log('A string was recieved as statistics via socket.io, trying to parse it.');
-        console.log(data);
         data = JSON.parse(data);
       }
-      console.log('OLA with client-key ' + data.clientKey + ' sent in some statistics!');
       saveStats(data);
     });
   });
