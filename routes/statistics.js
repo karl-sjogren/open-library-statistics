@@ -75,6 +75,7 @@ module.exports = function(app, io) {
       console.log(data);
       data = JSON.parse(data);
     }
+    console.log('OLA with client-key ' + data.clientKey + ' sent in some statistics!');
     saveStats(data);
   });
   
