@@ -2,6 +2,9 @@
 /* jshint indent:2 */
 $(document).ready(function() {
   var socket = io.connect();
+  
+  window.globalSocket = socket; // For debugging purposes
+  
   socket.on('performance', function (data) {
     var clientKey = data.clientKey;
     if(!clientKey) {
