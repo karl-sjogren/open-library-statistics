@@ -61,22 +61,24 @@ module.exports = function(app, io) {
     });
   };
   
-  io.on('ola-connected', function(data) {
-    console.log('OLA with client-key ' + data + ' connected via websockets.');
-  });
-  
-  io.on('ola-disconnected', function(data) {
-    console.log('OLA with client-key ' + data + ' disconnected via websockets.');
-  });
-  
-  io.on('statistics', function(data) {
-    if (typeof data == 'string' || data instanceof String) {
-      console.log('A string was recieved as statistics via socket.io, trying to parse it.');
-      console.log(data);
-      data = JSON.parse(data);
-    }
-    console.log('OLA with client-key ' + data.clientKey + ' sent in some statistics!');
-    saveStats(data);
+  io.on('connection', function(socket) {
+    socket.on('ola-connected', function(data) {
+      console.log('OLA with client-key ' + data + ' connected via websockets.');
+    });
+
+    socket.on('ola-disconnected', function(data) {
+      console.log('OLA with client-key ' + data + ' disconnected via websockets.');
+    });
+
+    socket.on('statistics', function(data) {
+      if (typeof data == 'string' || data instanceof String) {
+        console.log('A string was recieved as statistics via socket.io, trying to parse it.');
+        console.log(data);
+        data = JSON.parse(data);
+      }
+      console.log('OLA with client-key ' + data.clientKey + ' sent in some statistics!');
+      saveStats(data);
+    });
   });
   
   app.put('/statistics/collect', function (req, res) {
