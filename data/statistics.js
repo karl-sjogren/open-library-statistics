@@ -72,7 +72,7 @@ Client(function(err, db) {
     var updateKeywords = require('./statistics/search/keywords');
 
     Q.all([
-        //updateHours(db, opts),       updateDays(db, opts),       updateKeywords(db, opts),
+        updateHours(db, opts),       updateDays(db, opts),       updateKeywords(db, opts),
         updateHours(db, globalOpts), updateDays(db, globalOpts), updateKeywords(db, globalOpts)]).then(function() {
       done.resolve();
     });  
@@ -209,7 +209,7 @@ Client(function(err, db) {
     // TODO: Save title and ISBN somewhere as well
 
     Q.all([
-        //updateHours(db, opts),       updateDays(db, opts),
+        updateHours(db, opts),       updateDays(db, opts),
         updateHours(db, globalOpts), updateDays(db, globalOpts) ]).then(function() {
       done.resolve();
     });  
@@ -234,7 +234,7 @@ Client(function(err, db) {
     var updateDays = require('./statistics/actions/days');
 
     Q.all([
-        //updateHours(db, opts),       updateDays(db, opts),
+        updateHours(db, opts),       updateDays(db, opts),
         updateHours(db, globalOpts), updateDays(db, globalOpts) ]).then(function() {
       done.resolve();
     });  
@@ -261,7 +261,7 @@ Client(function(err, db) {
     // TODO: Save title and ISBN somewhere as well
 
     Q.all([
-        //updateHours(db, opts),       updateDays(db, opts),
+        updateHours(db, opts),       updateDays(db, opts),
         updateHours(db, globalOpts), updateDays(db, globalOpts) ]).then(function() {
       done.resolve();
     });  
