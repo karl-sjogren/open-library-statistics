@@ -135,25 +135,32 @@ module.exports = function(app, io) {
       body = [body];
     }
 
+    for(var i = 0; i < body.length; i++) {
+      var data = body[i];
+      if(!!data) {
+        // priority can be low, normal, medium, high, critical. The order is weird..
+        statsQueue.createJob('stats', data).priority('normal').save();
+      } else {
+        console.log('A null message was recieved and dropped.');
+      }
+    }
+    /*
     promiseFor(body, function(idx, item) {
       var done = Q.defer();
 
-      var clientKey = item.clientKey;
-      clientInstances.getByKey({clientKey: clientKey}).then(function(client) {
-        if(!client) {
-          console.log('Invalid clientKey specified: ' + clientKey);
-          return done.reject('Invalid clientKey specified: ' + clientKey);
-        }
 
-        saveStats(item, function() { done.resolve(); });
-      });
-
+      if(!!data) {
+        // priority can be low, normal, medium, high, critical. The order is weird..
+        statsQueue.createJob('stats', data).priority('normal').save();
+      } else {
+        console.log('A null message was recieved and dropped.');
+      }
       return done.promise;
     }).then(function(results) {
       if(results.failures.length > 0) {
         console.log('Failed items: ' + results.failures.length + ' (out of a total of ' + (results.success.length + results.failures.length) + ' items)'); 
       }
       res.end();
-    });
+    });*/
   });
 };
