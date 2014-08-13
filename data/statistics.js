@@ -42,6 +42,13 @@ Client(function(err, db) {
       case 'reservationremoved':
         saveReservation(item, done);
         break;
+      case 'logevent_fatal':
+      case 'logevent_error':
+      case 'logevent_warn':
+      case 'logevent_info':
+      case 'logevent_debug':
+        saveLogEvent(item, done);
+        break;
 
       default:
         console.log('An invalid type was supplied: ' + item.type.toLowerCase() + '\n' + JSON.stringify(item));
@@ -267,6 +274,31 @@ Client(function(err, db) {
     });  
   }
 
+  function saveLogEvent(item, done) {
+    item = item || { };
+
+    var opts = {
+      clientKey: item.clientKey,
+      date: new Date(item.timeStamp),
+      type: item.type
+    };
+
+    var globalOpts = {
+      clientKey: '000000000000000000000',
+      date: new Date(item.timeStamp),
+      type: item.type
+    };
+
+    var updateHours = require('./statistics/actions/hours');
+    var updateDays = require('./statistics/actions/days');
+
+    Q.all([
+        updateHours(db, opts),       updateDays(db, opts),
+        updateHours(db, globalOpts), updateDays(db, globalOpts) ]).then(function() {
+      done.resolve();
+    });  
+  }
+
   module.exports.save = save;
   module.exports.saveSearch = saveSearch;
   module.exports.savePerformance = savePerformance;
@@ -275,4 +307,5 @@ Client(function(err, db) {
   module.exports.saveElectronicMediaLoan = saveElectronicMediaLoan;
   module.exports.saveLogin = saveLogin;
   module.exports.saveReservation = saveReservation;
+  module.exports.saveLogEvent = saveLogEvent;
 });

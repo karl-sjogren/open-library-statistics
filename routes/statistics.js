@@ -1,12 +1,31 @@
 /* global require, module, console */
 /* jshint indent:2 */
 
-var statistics = require('../data/statistics');
-var clientInstances = require('../data/client-instances');
-var promiseFor = require('../helpers/promise-for');
-var Q = require('q');
+var statistics = require('../data/statistics'),
+    clientInstances = require('../data/client-instances'),
+    promiseFor = require('../helpers/promise-for'),
+    Q = require('q'),
+    url = require('url'),
+    kue = require('kue');
 
 module.exports = function(app, io) {
+  var redisURL = url.parse(process.env.REDISCLOUD_URL);
+  var statsQueue = kue.createQueue({
+    redis: {
+      port: redisURL.port,
+      host: redisURL.hostname,
+      auth: redisURL.auth.split(":")[1],
+      options: {
+        no_ready_check: true
+        // see https://github.com/mranney/node_redis#rediscreateclientport-host-options
+      }
+    }
+  });
+  
+  statsQueue.process('stats', function(job, done){
+    saveStats(job.data, done);
+  })
+  
   function saveStats(item, callback) {
     statistics.save(item).then(function() {
       if(!!item.type) {
@@ -18,9 +37,9 @@ module.exports = function(app, io) {
             'lon': client.longitude
           };
 
-          if(!!search && search.keywords.length > 0)
+          if(!!search && search.keywords.length > 0) {
             io.sockets.emit('search', search);  // No need to emit empty keywords
-
+          }
         } else if(type === 'performance') {
           var perf = {
             clientKey: item.clientKey,
@@ -52,11 +71,11 @@ module.exports = function(app, io) {
           };
 
           io.sockets.emit(type, reindex);
-
         }
 
-        if(!!callback)
+        if(!!callback) {
           callback();
+        }
       }
     });
   };
@@ -71,11 +90,16 @@ module.exports = function(app, io) {
     });
 
     socket.on('statistics', function(data) {
-      if (typeof data == 'string' || data instanceof String) {
+      if(typeof data == 'string' || data instanceof String) {
         console.log('A string was recieved as statistics via socket.io, trying to parse it.');
         data = JSON.parse(data);
       }
-      saveStats(data);
+      if(!!data) {
+        // priority can be low, normal, medium, high, critical. The order is weird..
+        statsQueue.createJob('stats', data).priority('normal').save();
+      } else {
+        console.log('A null message was recieved and dropped.');
+      }
     });
   });
   
@@ -112,6 +136,4 @@ module.exports = function(app, io) {
       res.end();
     });
   });
-  
-  
 };
