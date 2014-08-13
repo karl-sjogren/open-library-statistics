@@ -15,11 +15,25 @@ module.exports = function(app, io) {
       port: redisURL.port,
       host: redisURL.hostname,
       auth: redisURL.auth.split(":")[1],
+      disableSearch: true,
       options: {
         no_ready_check: true
         // see https://github.com/mranney/node_redis#rediscreateclientport-host-options
       }
     }
+  });
+  
+  statsQueue.on('job complete', function(id, result) {
+    kue.Job.get(id, function(err, job){
+      if (err) {
+        return;
+      }
+      job.remove(function(err) {
+        if (err) {
+          console.log('Failed to remove job with id #%d', job.id);
+        }
+      });
+    });
   });
   
   statsQueue.process('stats', function(job, done){
