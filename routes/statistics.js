@@ -4,48 +4,9 @@
 var statistics = require('../data/statistics'),
     clientInstances = require('../data/client-instances'),
     promiseFor = require('../helpers/promise-for'),
-    Q = require('q'),
-    url = require('url'),
-    kue = require('kue');
+    Q = require('q');
 
 module.exports = function(app, io) {
-  var redisURL = url.parse(process.env.REDISCLOUD_URL);
-  var statsQueue = kue.createQueue({
-    redis: {
-      port: redisURL.port,
-      host: redisURL.hostname,
-      auth: redisURL.auth.split(":")[1],
-      disableSearch: true,
-      options: {
-        no_ready_check: true
-        // see https://github.com/mranney/node_redis#rediscreateclientport-host-options
-      }
-    }
-  });
-  
-  statsQueue.on('job complete', function(id, result) {
-    console.log('Job completed!');
-    kue.Job.get(id, function(err, job){
-      if (err) {
-          console.log('Failed to remove job with id #%d. ' + err, id);
-        return;
-      }
-      job.remove(function(err) {
-        if (err) {
-          console.log('Failed to remove job with id #%d. ' + err, job.id);
-        }
-        console.log('Job removed!');
-      });
-    });
-  });
-  
-  setTimeout(function() {
-    statsQueue.process('stats', 5, function(job, done){
-      console.log('Processing job!');
-      saveStats(job.data, done);
-    });
-  }, 5000);
-  
   function saveStats(item, callback) {
     statistics.save(item).then(function() {
       if(!!item.type) {
@@ -57,9 +18,9 @@ module.exports = function(app, io) {
             'lon': client.longitude
           };
 
-          if(!!search && search.keywords.length > 0) {
+          if(!!search && search.keywords.length > 0)
             io.sockets.emit('search', search);  // No need to emit empty keywords
-          }
+
         } else if(type === 'performance') {
           var perf = {
             clientKey: item.clientKey,
@@ -91,13 +52,12 @@ module.exports = function(app, io) {
           };
 
           io.sockets.emit(type, reindex);
-        }
-      } else {
-        console.log('Recieved an item without a type.' + JSON.stringify(item));
-      }
 
-      if(!!callback) {
-        callback();
+        }
+
+        if(!!callback) {
+          callback();
+        }
       }
     });
   };
@@ -113,11 +73,11 @@ module.exports = function(app, io) {
 
     socket.on('statistics', function(data) {
       if(typeof data == 'string' || data instanceof String) {
+        console.log('A string was recieved as statistics via socket.io, trying to parse it.');
         data = JSON.parse(data);
       }
       if(!!data) {
-        // priority can be low, normal, medium, high, critical. The order is weird..
-        statsQueue.createJob('stats', data).priority('normal').save();
+        saveStats(data);
       } else {
         console.log('A null message was recieved and dropped.');
       }
@@ -136,32 +96,25 @@ module.exports = function(app, io) {
       body = [body];
     }
 
-    for(var i = 0; i < body.length; i++) {
-      var data = body[i];
-      if(!!data) {
-        // priority can be low, normal, medium, high, critical. The order is weird..
-        statsQueue.createJob('stats', data).priority('normal').save();
-      } else {
-        console.log('A null message was recieved and dropped.');
-      }
-    }
-    /*
     promiseFor(body, function(idx, item) {
       var done = Q.defer();
 
+      var clientKey = item.clientKey;
+      clientInstances.getByKey({clientKey: clientKey}).then(function(client) {
+        if(!client) {
+          console.log('Invalid clientKey specified: ' + clientKey);
+          return done.reject('Invalid clientKey specified: ' + clientKey);
+        }
 
-      if(!!data) {
-        // priority can be low, normal, medium, high, critical. The order is weird..
-        statsQueue.createJob('stats', data).priority('normal').save();
-      } else {
-        console.log('A null message was recieved and dropped.');
-      }
+        saveStats(item, function() { done.resolve(); });
+      });
+
       return done.promise;
     }).then(function(results) {
       if(results.failures.length > 0) {
         console.log('Failed items: ' + results.failures.length + ' (out of a total of ' + (results.success.length + results.failures.length) + ' items)'); 
       }
       res.end();
-    });*/
+    });
   });
 };
