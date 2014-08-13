@@ -24,6 +24,7 @@ module.exports = function(app, io) {
   });
   
   statsQueue.on('job complete', function(id, result) {
+    console.log('Job completed!');
     kue.Job.get(id, function(err, job){
       if (err) {
         return;
@@ -32,11 +33,13 @@ module.exports = function(app, io) {
         if (err) {
           console.log('Failed to remove job with id #%d', job.id);
         }
+        console.log('Job removed!');
       });
     });
   });
   
   statsQueue.process('stats', function(job, done){
+    console.log('Processing job!');
     saveStats(job.data, done);
   })
   
@@ -105,7 +108,6 @@ module.exports = function(app, io) {
 
     socket.on('statistics', function(data) {
       if(typeof data == 'string' || data instanceof String) {
-        console.log('A string was recieved as statistics via socket.io, trying to parse it.');
         data = JSON.parse(data);
       }
       if(!!data) {
