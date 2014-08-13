@@ -38,10 +38,12 @@ module.exports = function(app, io) {
     });
   });
   
-  statsQueue.process('stats', function(job, done){
-    console.log('Processing job!');
-    saveStats(job.data, done);
-  })
+  setTimeout(function() {
+    statsQueue.process('stats', function(job, done){
+      console.log('Processing job!');
+      saveStats(job.data, done);
+    });
+  }, 5000);
   
   function saveStats(item, callback) {
     statistics.save(item).then(function() {
@@ -89,10 +91,12 @@ module.exports = function(app, io) {
 
           io.sockets.emit(type, reindex);
         }
+      } else {
+        console.log('Recieved an item without a type.' + JSON.stringify(item));
+      }
 
-        if(!!callback) {
-          callback();
-        }
+      if(!!callback) {
+        callback();
       }
     });
   };
