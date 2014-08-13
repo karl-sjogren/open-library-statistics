@@ -27,11 +27,12 @@ module.exports = function(app, io) {
     console.log('Job completed!');
     kue.Job.get(id, function(err, job){
       if (err) {
+          console.log('Failed to remove job with id #%d. ' + err, id);
         return;
       }
       job.remove(function(err) {
         if (err) {
-          console.log('Failed to remove job with id #%d', job.id);
+          console.log('Failed to remove job with id #%d. ' + err, job.id);
         }
         console.log('Job removed!');
       });
@@ -39,7 +40,7 @@ module.exports = function(app, io) {
   });
   
   setTimeout(function() {
-    statsQueue.process('stats', function(job, done){
+    statsQueue.process('stats', 5, function(job, done){
       console.log('Processing job!');
       saveStats(job.data, done);
     });
