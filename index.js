@@ -40,7 +40,7 @@ Q.all([compile.less(), compile.js(), compile.fonts()]).then(function() {
   require('./helpers/register-partials')();  
   
   if(process.env.NODE_ENV === 'development') {
-    require('./helpers/tempdata.js')(app, io); // Load the tempdata-provider
+    //require('./helpers/tempdata.js')(app, io); // Load the tempdata-provider
     io.set('log level', 1);
   } else {
     io.enable('browser client minification');
