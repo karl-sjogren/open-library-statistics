@@ -62,14 +62,36 @@ module.exports = function(app, io) {
     });
   };
   
+  var clients = {};
+  
   io.on('connection', function(socket) {
+    clients[socket.id] = {
+      clientKey: ''
+    }
+    
     socket.on('ola-connected', function(data) {
       console.log('OLA with client-key ' + data + ' connected via websockets.');
+      
+      var done = Q.defer();
+      statistics.saveConnectionEvent('connect', data, done);
+      clients[socket.id].clientKey = data;
     });
 
     socket.on('ola-disconnected', function(data) {
       console.log('OLA with client-key ' + data + ' disconnected via websockets.');
+      
+      var done = Q.defer();
+      statistics.saveConnectionEvent('disconnect', data, done);
+      delete clients[socket.id];
     });
+    
+    socket.on('disconnect', function() {
+      console.log('OLA with client-key ' + clients[socket.id].clientKey + ' disconnected without sending information.');
+      
+      var done = Q.defer();
+      statistics.saveConnectionEvent('disconnect', data, done);
+      delete clients[socket.id];
+   });
 
     socket.on('statistics', function(data) {
       if(typeof data == 'string' || data instanceof String) {

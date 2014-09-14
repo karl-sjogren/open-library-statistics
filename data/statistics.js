@@ -247,6 +247,25 @@ Client(function(err, db) {
     });  
   }
 
+  function saveConnectionEvent(type, clientKey, done) {
+    var opts = {
+      clientKey: clientKey,
+      date: new Date(item.timeStamp),
+      type: type
+    };
+
+    var collection = db.collection('connections');
+    collection.insert(opts, function(err, docs) {
+      if(err) {
+        console.log('Failed updating docs for hours');
+        done.reject(err);
+        return;
+      }
+
+      done.resolve(docs);
+    }); 
+  }
+
   function saveReservation(item, done) {
     item = item || { };
 
@@ -308,4 +327,5 @@ Client(function(err, db) {
   module.exports.saveLogin = saveLogin;
   module.exports.saveReservation = saveReservation;
   module.exports.saveLogEvent = saveLogEvent;
+  module.exports.saveConnectionEvent = saveConnectionEvent;
 });
