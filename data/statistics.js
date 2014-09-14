@@ -250,7 +250,7 @@ Client(function(err, db) {
   function saveConnectionEvent(type, clientKey, done) {
     var opts = {
       clientKey: clientKey,
-      date: new Date(item.timeStamp),
+      date: new Date(),
       type: type
     };
 
