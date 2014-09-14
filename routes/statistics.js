@@ -78,18 +78,20 @@ module.exports = function(app, io) {
     });
 
     socket.on('ola-disconnected', function(data) {
-      console.log('OLA with client-key ' + data + ' disconnected via websockets.');
+      var clientKey = data || clients[socket.id].clientKey;
+      console.log('OLA with client-key ' + clientKey + ' disconnected via websockets.');
       
       var done = Q.defer();
-      statistics.saveConnectionEvent('disconnect', data, done);
+      statistics.saveConnectionEvent('disconnect', clientKey, done);
       delete clients[socket.id];
     });
     
     socket.on('disconnect', function() {
-      console.log('OLA with client-key ' + clients[socket.id].clientKey + ' disconnected without sending information.');
+      var clientKey = clients[socket.id].clientKey;
+      console.log('OLA with client-key ' + clientKey + ' disconnected without sending information.');
       
       var done = Q.defer();
-      statistics.saveConnectionEvent('disconnect', data, done);
+      statistics.saveConnectionEvent('disconnect', clientKey, done);
       delete clients[socket.id];
    });
 
