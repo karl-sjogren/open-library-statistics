@@ -17,6 +17,11 @@ var express = require('express'),
     error = require('./middleware/error'),
     Q = require('q');
 
+// Good for debugging when we leave heroku
+process.on('uncaughtException', function (err) {
+    fs.writeFileSync("uncaughtException.txt",  err, "utf8");    
+})
+
 // Precompile bootstrap sources and wait with loading the rest
 var compile = require('./bootstrap/compile');
 
@@ -49,7 +54,10 @@ Q.all([compile.less(), compile.js(), compile.fonts()]).then(function() {
     io.set('log level', 1); 
   }
   
-  var port = Number(process.env.PORT || 4096);
+  // When running under iisnode, process.env.PORT is a namedpipe
+  // instead of a regular port number and Number() will therefore
+  // produce NaN.
+  var port = process.env.PORT || 4096;
   console.log('Start listening on port ' + port); 
   // Start listening on the port specified by Heroku or on 4096 if we are developing
   server.listen(port);
