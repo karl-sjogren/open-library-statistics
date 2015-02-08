@@ -1,0 +1,15 @@
+  <div {{bind-attr class=":expandable isExpanded:expanded" }}>
+    <div {{action toggleExpanded }} class="expand-flip">
+      <h2>
+        {{header}}
+        {{#if isExpanded }}
+          <span class="caret-large"></span>
+        {{else}}
+          <span class="caret-large-right"></span>
+        {{/if}}
+        </h2>
+    </div>
+    <div class="content">
+      {{yield}}
+    </div>
+  </div>

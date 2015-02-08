@@ -1,35 +1,44 @@
 {
-  "name": "search-visualizer",
+  "name": "statistics",
   "version": "0.0.0",
-  "description": "search-visualizer",
-  "main": "index.js",
+  "private": true,
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ember server",
+    "build": "ember build",
+    "test": "ember test"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/karl-sjogren/search-visualizer"
-  },
+  "repository": "https://github.com/stefanpenner/ember-cli",
   "engines": {
-    "node": "0.10.x"
+    "node": ">= 0.10.0"
   },
-  "author": "Karl-Johan Sjögren",
+  "author": "",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/karl-sjogren/search-visualizer/issues"
+  "devDependencies": {
+    "body-parser": "^1.2.0",
+    "broccoli-asset-rev": "0.0.17",
+    "broccoli-ember-hbs-template-compiler": "^1.6.1",
+    "broccoli-less-single": "~0.1.4",
+    "broccoli-merge-trees": "~0.1.4",
+    "broccoli-static-compiler": "~0.1.4",
+    "ember-cli": "0.0.44",
+    "ember-cli-ember-data": "0.1.0",
+    "ember-cli-ic-ajax": "0.1.1",
+    "ember-cli-inject-live-reload": "^1.0.2",
+    "ember-cli-qunit": "0.1.0",
+    "express": "^4.9.0",
+    "glob": "^4.0.5",
+    "node-logentries": "^0.1.4"
   },
   "dependencies": {
     "socket.io": "~0.9.16",
-    "express": "~4.0.0",
-    "less-middleware": "~0.2.1-beta",
+    "express": "~4.9.0",
     "body-parser": "~1.0.2",
-    "newrelic": "~1.5.2",
     "strftime": "~0.8.0",
     "q": "~1.0.1",
-    "mongodb": "~1.4.2",
-    "less": "~1.7.0",
-    "uglify-js": "~2.4.13",
-    "ncp": "~0.5.1",
-    "hbs": "~2.6.0"
+    "mongodb": "~1.4.10"
   }
 }
